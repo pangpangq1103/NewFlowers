@@ -206,13 +206,13 @@ namespace LeagueSharp.Common
         public static void AddToMenu(Menu config)
         {
             _configMenu = config;
-            config.AddItem(new MenuItem("FocusSelected", "Focus selected target").SetShared().SetValue(true));
+            config.AddItem(new MenuItem("FocusSelected", "集中攻击选择的目标").SetShared().SetValue(true));
             config.AddItem(
-                new MenuItem("ForceFocusSelected", "Only attack selected target").SetShared().SetValue(false));
+                new MenuItem("ForceFocusSelected", "仅攻击被选择的目标").SetShared().SetValue(false));
             config.AddItem(
-                new MenuItem("SelTColor", "Selected target color").SetShared().SetValue(new Circle(true, Color.Red)));
+                new MenuItem("SelTColor", "被选择目标地下线圈颜色").SetShared().SetValue(new Circle(true, Color.Red)));
             config.AddItem(new MenuItem("Sep", "").SetShared());
-            var autoPriorityItem = new MenuItem("AutoPriority", "Auto arrange priorities").SetShared().SetValue(false);
+            var autoPriorityItem = new MenuItem("AutoPriority", "自动排列顺序").SetShared().SetValue(false);
             autoPriorityItem.ValueChanged += autoPriorityItem_ValueChanged;
 
             foreach (var enemy in HeroManager.Enemies)
@@ -232,8 +232,10 @@ namespace LeagueSharp.Common
             }
             config.AddItem(autoPriorityItem);
             config.AddItem(
-                new MenuItem("TargetingMode", "Target Mode").SetShared()
+                new MenuItem("TargetingMode", "目标模式").SetShared()
                     .SetValue(new StringList(Enum.GetNames(typeof(TargetingMode)))));
+            config.AddItem(new MenuItem("Flowers", "Best-必备优化库"));
+            config.AddItem(new MenuItem("Flowers1", "对外QQ群:299606556"));
         }
 
         private static void autoPriorityItem_ValueChanged(object sender, OnValueChangeEventArgs e)

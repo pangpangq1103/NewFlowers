@@ -301,7 +301,7 @@ namespace LeagueSharp.Common
         internal static void DrawOnOff(bool on, Vector2 position, MenuItem item)
         {
             DrawBox(position, item.Height, item.Height, on ? Color.Green : Color.Red, 1, Color.Black);
-            var s = on ? "On" : "Off";
+            var s = on ? "开" : "关";
             Font.DrawText(
                 null, s,
                 new Rectangle(
