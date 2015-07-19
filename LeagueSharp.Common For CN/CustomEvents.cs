@@ -138,21 +138,8 @@ namespace LeagueSharp.Common
                 ObjectManager.Player.IsDashing();
             }
 
-            /// <summary>
-            ///     OnLevelUpSpell gets called after you leveled a spell
-            /// </summary>
-            public static event OnLeveledUpSpell OnLevelUpSpell;
-
             private static void PacketHandler(GamePacketEventArgs args) {}
 
-            /// <summary>
-            ///     Gets called when a unit gets a level up
-            /// </summary>
-            public static event OnLeveledUp OnLevelUp;
-
-            /// <summary>
-            ///     OnDash is getting called when a unit dashes.
-            /// </summary>
             public static event OnDashed OnDash;
 
             public static void TriggerOnDash(Obj_AI_Base sender, Dash.DashItem args)

@@ -34,7 +34,6 @@ namespace LeagueSharp.Common
 {
     public static class Config
     {
-        private static string _leagueSharpDirectory;
         private static string _appDataDirectory;
         private static byte _showMenuHotkey;
         private static byte _showMenuToggleHotkey;

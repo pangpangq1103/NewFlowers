@@ -37,7 +37,7 @@ namespace LeagueSharp.Common
         /// </summary>
         public static bool HasItem(string name, Obj_AI_Hero hero = null)
         {
-            return (hero ?? ObjectManager.Player).InventoryItems.Any(slot => slot.Name == name);
+            return (hero ?? ObjectManager.Player).InventoryItems.Any(slot => slot.IData.DisplayName == name);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace LeagueSharp.Common
         /// </summary>
         public static bool CanUseItem(string name)
         {
-            foreach (var slot in ObjectManager.Player.InventoryItems.Where(slot => slot.Name == name))
+            foreach (var slot in ObjectManager.Player.InventoryItems.Where(slot => slot.IData.DisplayName == name))
             {
                 var inst = ObjectManager.Player.Spellbook.Spells.FirstOrDefault(spell =>
                     (int)spell.Slot == slot.Slot + (int)SpellSlot.Item1);
@@ -83,7 +83,7 @@ namespace LeagueSharp.Common
         /// </summary>
         public static bool UseItem(string name, Obj_AI_Base target = null)
         {
-            foreach (var slot in ObjectManager.Player.InventoryItems.Where(slot => slot.Name == name))
+            foreach (var slot in ObjectManager.Player.InventoryItems.Where(slot => slot.IData.DisplayName == name))
             {
                 if (target != null)
                 {
