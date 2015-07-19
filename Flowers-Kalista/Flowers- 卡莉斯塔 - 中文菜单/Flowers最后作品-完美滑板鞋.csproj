@@ -57,16 +57,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DamageIndicator.cs" />
-    <Compile Include="Flee.cs" />
-    <Compile Include="KalistaM.cs" />
-    <Compile Include="killables.cs" />
-    <Compile Include="lost.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Flowers.cs" />
+    <Compile Include="Huabian\Lost\DamageIndicator.cs" />
+    <Compile Include="Huabian\Lost\Flee.cs" />
+    <Compile Include="Huabian\KalistaM.cs" />
+    <Compile Include="Huabian\Lost\killables.cs" />
+    <Compile Include="Huabian\Lost\lost.cs" />
+    <Compile Include="Huabian\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Huabian\App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

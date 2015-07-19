@@ -7,7 +7,7 @@ using LeagueSharp.Common;
 
 namespace Flowers滑板鞋_重生_
 {
-    internal class Program
+    internal class Flowers
     {
         static void Main(string[] args)
         {

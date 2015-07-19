@@ -51,12 +51,16 @@ namespace Flowers滑板鞋_重生_
         { 
             get; set; 
         }
-        public const string ChampionName = "Kalista";
-        public static Orbwalking.Orbwalker Orbwalker;
-        public static readonly Item 弯刀 = ItemData.Bilgewater_Cutlass.GetItem();
-        public static readonly Item 破败 = ItemData.Blade_of_the_Ruined_King.GetItem();
 
-        public static readonly Item 幽梦 = ItemData.Youmuus_Ghostblade.GetItem();
+        public const string ChampionName = "Kalista";
+
+        public static Orbwalking.Orbwalker Orbwalker;
+
+        public static readonly Item 弯刀 = LeagueSharp.Common.Data.ItemData.Bilgewater_Cutlass.GetItem();
+
+        public static readonly Item 破败 = LeagueSharp.Common.Data.ItemData.Blade_of_the_Ruined_King.GetItem();
+
+        public static readonly Item 幽梦 = LeagueSharp.Common.Data.ItemData.Youmuus_Ghostblade.GetItem();
         public static void Game_OnGameLoad(EventArgs args)
         {
             if (ObjectManager.Player.ChampionName != ChampionName)
@@ -66,29 +70,47 @@ namespace Flowers滑板鞋_重生_
 
             Notifications.AddNotification("Flowers Kalista by NightMoon", 1000);
             Notifications.AddNotification("`                  And  Lost`", 1000);
-            Notifications.AddNotification("Version : 1.0.0.0", 1000);
-            Game.PrintChat("Flowers-Kalista Loaded!~~~ Version : 1.0.0.0 Thanks for your use!");
-            Game.PrintChat("What are the deficiencies please immediately feedback. Thank you! ");
+            Notifications.AddNotification("Version : 1.0.0.3", 1000);
+            Game.PrintChat("Flowers-Kalista Loaded!~~~ Version : 1.0.0.3 Thanks for your use!");
+            Game.PrintChat("婊戜綘楹荤椆璧剁揣鍘诲棬 - By 鑺辫竟 ");
             Q = new Spell(SpellSlot.Q, 1160f);
             W = new Spell(SpellSlot.W, 5000f);
             E = new Spell(SpellSlot.E, 1000f);
             R = new Spell(SpellSlot.R, 1500f);
 
             Q.SetSkillshot(0.25f, 35f, 1600f, true, SkillshotType.SkillshotLine);
-//            R.SetSkillshot(0.50f, 1500, float.MaxValue, false, SkillshotType.SkillshotCircle);
+            R.SetSkillshot(0.50f, 1500, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             KalistaM.KalistaMenu();
 
             Game.OnUpdate += 总菜单;
             Drawing.OnDraw += 范围显示;
             DamageIndicator.DamageToUnit = 显示E伤害;
+            Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+        }
+
+        private static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (sender.IsMe && args.SData.Name == E.Instance.Name)
+                Utility.DelayAction.Add(250, Orbwalking.ResetAutoAttackTimer);
+
+            if (KalistaM.菜单.Item("Save", true).GetValue<Boolean>() && R.IsReady())
+            {
+                if (sender.Type == GameObjectType.obj_AI_Hero && sender.IsEnemy)
+                {
+                    var soulbound = HeroManager.Allies.FirstOrDefault(hero => hero.HasBuff("kalistacoopstrikeally", true) && args.Target.NetworkId == hero.NetworkId && hero.HealthPercent <= KalistaM.菜单.Item("jilaohp").GetValue<Slider>().Value);
+
+                    if (soulbound != null)
+                        R.Cast();
+                }
+            }
         }
 
         private static float 显示E伤害(Obj_AI_Hero hero)
         {
             float damage = 0;
 
-            if (E.IsReady() && KalistaM.菜单.Item("DrawEDamage").GetValue<bool>())
+            if (E.IsReady() && KalistaM.菜单.Item("DrawEDamage", true).GetValue<Boolean>())
                 damage += E.GetDamage(hero); 
             Color.FromArgb(255, 255, 255);
 
@@ -183,38 +205,10 @@ namespace Flowers滑板鞋_重生_
                Render.Circle.DrawCircle(Player.Position, KalistaM.菜单.Item("maxRange", true).GetValue<Slider>().Value, KalistaM.菜单.Item("maxBRange", true).GetValue<Circle>().Color, 3);*/
         }
 
-/*       private static void 物品使用()//引用  JustMaokai THX
-        {
-
-            var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
-            if (target == null || !target.IsValidTarget())
-                return;
-
-            var botrk = ItemData.Blade_of_the_Ruined_King.GetItem();
-            var Ghost = ItemData.Youmuus_Ghostblade.GetItem();
-            var cutlass = ItemData.Bilgewater_Cutlass.GetItem();
-
-            if (botrk.IsReady() && botrk.IsOwned(Player) && botrk.IsInRange(target) && target.HealthPercent <= KalistaM.菜单.Item("eL").GetValue<Slider>().Value && KalistaM.菜单.Item("UseBOTRK").GetValue<bool>())
-
-                botrk.Cast(target);
-
-            if (botrk.IsReady() && botrk.IsOwned(Player) && botrk.IsInRange(target) && target.HealthPercent <= KalistaM.菜单.Item("oL").GetValue<Slider>().Value && KalistaM.菜单.Item("UseBOTRK").GetValue<bool>())
-
-                botrk.Cast(target);
-
-            if (cutlass.IsReady() && cutlass.IsOwned(Player) && cutlass.IsInRange(target) && target.HealthPercent <= KalistaM.菜单.Item("HLe").GetValue<Slider>().Value && KalistaM.菜单.Item("UseBilge").GetValue<bool>())
-
-                cutlass.Cast(target);
-
-            if (Ghost.IsReady() && Ghost.IsOwned(Player) && target.IsValidTarget(E.Range) && KalistaM.菜单.Item("useGhostblade").GetValue<bool>())
-
-                Ghost.Cast();
-
-        }*/
         public static bool UseBotrk(Obj_AI_Hero target)
         {
-            var 使用弯刀 = KalistaM.菜单.Item("UseBC").GetValue<bool>();
-            var 使用破败 = KalistaM.菜单.Item("UseBRK").GetValue<bool>();
+            var 使用弯刀 = KalistaM.菜单.Item("UseBC", true).GetValue<Boolean>();
+            var 使用破败 = KalistaM.菜单.Item("UseBRK", true).GetValue<Boolean>();
 
             if (使用破败 && 破败.IsReady() && target.IsValidTarget(破败.Range) &&
                 Player.Health + Player.GetItemDamage(target, Damage.DamageItems.Botrk) < Player.MaxHealth)
@@ -230,7 +224,7 @@ namespace Flowers滑板鞋_重生_
 
         public static bool UseYoumuu(Obj_AI_Base target)
         {
-            var 使用幽梦 = KalistaM.菜单.Item("USEYUU").GetValue<bool>();
+            var 使用幽梦 = KalistaM.菜单.Item("USEYUU", true).GetValue<Boolean>();
 
             if (使用幽梦 && 幽梦.IsReady() && target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player) + 50))
             {
@@ -238,6 +232,7 @@ namespace Flowers滑板鞋_重生_
             }
             return false;
         }
+
         private static void 总菜单(EventArgs args)
         {
             if (Player.IsDead)
@@ -264,19 +259,29 @@ namespace Flowers滑板鞋_重生_
                 骚扰();
             }
 
-            连招E击杀();
             E抢野怪();
             自动E();
-           /* Balista();*/
             逃跑();
+            KSE();
+        }
+
+        private static void KSE()
+        {
+            if (!KalistaM.菜单.Item("killsteal", true).GetValue<Boolean>() || !E.IsReady())
+                return;
+
+            var target = HeroManager.Enemies.FirstOrDefault(x => !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield) && E.CanCast(x) && (x.Health + (x.HPRegenRate / 2)) <= E.GetDamage(x));
+
+            if (E.CanCast(target))
+                E.Cast();
         }
 
         private static void 连招()
         {
-            if (!(getManaPer > KalistaM.菜单.Item("lzmp").GetValue<Slider>().Value))
+            if (!(getManaPer > KalistaM.菜单.Item("lzmp",true).GetValue<Slider>().Value))
                 return;
 
-            if (KalistaM.菜单.Item("lzp").GetValue<bool>())
+            if (KalistaM.菜单.Item("lzp", true).GetValue<Boolean>())
             {
                 var Qtarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical, true);
 
@@ -286,10 +291,11 @@ namespace Flowers滑板鞋_重生_
 
             var Minion = MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Enemy).Where(x => x.Health <= E.GetDamage(x)).OrderBy(x => x.Health).FirstOrDefault();
             var Target = HeroManager.Enemies.Where(x => E.CanCast(x) && E.GetDamage(x) >= 1 && !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield)).OrderByDescending(x => E.GetDamage(x)).FirstOrDefault();
-            var target = Target;
-            if (KalistaM.菜单.Item("lze").GetValue<bool>() && (E.Instance.State == SpellState.Ready || E.Instance.State == SpellState.Surpressed) && target.HasBuffOfType(BuffType.SpellShield))
+            var 连招E目标 = Target;
+            if (KalistaM.菜单.Item("lze", true).GetValue<Boolean>() && (E.Instance.State == SpellState.Ready 
+                || E.Instance.State == SpellState.Surpressed) && 连招E目标.HasBuffOfType(BuffType.SpellShield))
             {
-                if (Player.Distance(target, true) > Math.Pow(Orbwalking.GetRealAutoAttackRange(target), 2))
+                if (Player.Distance(连招E目标, true) > Math.Pow(Orbwalking.GetRealAutoAttackRange(连招E目标), 2))
                 {
                     var minions = ObjectManager.Get<Obj_AI_Minion>().Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
                     if (minions.Any(m => m.IsRendKillable()))
@@ -298,39 +304,63 @@ namespace Flowers滑板鞋_重生_
                     }
                     else
                     {
-                        var minion = MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Enemy).Find(m => m.Health > Player.GetAutoAttackDamage(m) && m.Health < Player.GetAutoAttackDamage(m) + E.GetDamage(m, (m.HasBuffOfType(BuffType.SpellShield) ? m.GetRendBuff().Count + 1 : 1)));
+                        var minion = MinionManager.GetMinions(Player.ServerPosition, E.Range, 
+                            MinionTypes.All, MinionTeam.Enemy).Find(m => m.Health > Player.GetAutoAttackDamage(m) 
+                                && m.Health < Player.GetAutoAttackDamage(m) + E.GetDamage(m, 
+                                (m.HasBuffOfType(BuffType.SpellShield) ? m.GetRendBuff().Count + 1 : 1)));
                         if (minion != null)
                         {
                             Orbwalker.ForceTarget(minion);
                         }
                     }
                 }
-                else if (E.IsInRange(target))
+                else if (E.IsInRange(连招E目标))
                 {
-                    if (target.IsRendKillable())
+                    if (连招E目标.IsRendKillable())
                     {
                         E.Cast(true);
                     }
-                    else if (target.GetRendBuff().Count >= KalistaM.菜单.Item("lzeeeeee").GetValue<Slider>().Value)
+                    else if (连招E目标.GetRendBuff().Count >= KalistaM.菜单.Item("lzeeeeee",true).GetValue<Slider>().Value)
                     {
-                        if (target.ServerPosition.Distance(Player.ServerPosition, true) > Math.Pow(E.Range * 0.8, 2) ||
-                            target.GetRendBuff().EndTime - Game.Time < 0.3)
+                        if (连招E目标.ServerPosition.Distance(Player.ServerPosition, true) > Math.Pow(E.Range * 0.8, 2) ||
+                            连招E目标.GetRendBuff().EndTime - Game.Time < 0.3)
                         {
                             E.Cast(true);
                         }
                     }
                 }
+
+                var eTarget = HeroManager.Enemies.Where(x => x.IsValidTarget(E.Range) && 
+                    E.GetDamage(x) >= 1 && !x.HasBuffOfType(BuffType.Invulnerability) && 
+                    !x.HasBuffOfType(BuffType.SpellShield)).OrderByDescending(x => E.GetDamage(x)).FirstOrDefault();
+
+                if (eTarget != null && eTarget.Health <= E.GetDamage(eTarget))
+                    E.Cast();
             }
+
             if (Target.Health <= E.GetDamage(Target) || (E.CanCast(Minion) && E.CanCast(Target)))
                 E.Cast();
-        }
 
+            if (!KalistaM.菜单.Item("lzeee", true).GetValue<Boolean>() || !E.IsReady())
+            {
+                return;
+            }
+
+            var 连招E目标1 = HeroManager.Enemies.FirstOrDefault(x => !x.HasBuffOfType
+                (BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield) 
+                && E.CanCast(x) && (x.Health + (x.HPRegenRate / 2)) <= E.GetDamage(x));
+
+            if (E.CanCast(连招E目标1))
+            {
+                E.Cast();
+            }
+        }
         private static void 骚扰()
         {
-            if (!(getManaPer > KalistaM.菜单.Item("srmp").GetValue<Slider>().Value))
+            if (!(getManaPer > KalistaM.菜单.Item("srmp",true).GetValue<Slider>().Value))
                 return;
 
-            if (KalistaM.菜单.Item("srq").GetValue<bool>())
+            if (KalistaM.菜单.Item("srq", true).GetValue<Boolean>())
             {
                 var Qtarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical, true);
 
@@ -340,28 +370,28 @@ namespace Flowers滑板鞋_重生_
         }
         private static void 清野()
         {
-            if (!Orbwalking.CanMove(1) || !(getManaPer > KalistaM.菜单.Item("qxmp").GetValue<Slider>().Value))
+            if (!Orbwalking.CanMove(1) || !(getManaPer > KalistaM.菜单.Item("qxmp",true).GetValue<Slider>().Value))
                 return;
 
-            var Mobs = MinionManager.GetMinions(Player.ServerPosition, Orbwalking.GetRealAutoAttackRange(Player) + 100, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
+            var Mobs = MinionManager.GetMinions(Player.ServerPosition, Orbwalking.GetRealAutoAttackRange(Player) + 100, 
+                MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
 
             if (Mobs.Count <= 0)
                 return;
 
-            if (KalistaM.菜单.Item("qyq").GetValue<bool>() && Q.CanCast(Mobs[0]))
+            if (KalistaM.菜单.Item("qyq", true).GetValue<Boolean>() && Q.CanCast(Mobs[0]))
                 Q.Cast(Mobs[0]);
 
-            if (KalistaM.菜单.Item("qye").GetValue<bool>() && E.CanCast(Mobs[0]))
+            if (KalistaM.菜单.Item("qye", true).GetValue<Boolean>() && E.CanCast(Mobs[0]))
             {
                 if (Mobs[0].Health + (Mobs[0].HPRegenRate / 2) <= E.GetDamage(Mobs[0]))
                     E.Cast();
             }
         }
-
         private static void 清线()
         {
 
-            if (!Orbwalking.CanMove(1) || !(getManaPer > KalistaM.菜单.Item("qxmp").GetValue<Slider>().Value))
+            if (!Orbwalking.CanMove(1) || !(getManaPer > KalistaM.菜单.Item("qxmp",true).GetValue<Slider>().Value))
                 return;
 
             var Minions = MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Enemy);
@@ -369,7 +399,7 @@ namespace Flowers滑板鞋_重生_
             if (Minions.Count <= 0)
                 return;
 
-            if (KalistaM.菜单.Item("qxq").GetValue<bool>() && Q.IsReady())
+            if (KalistaM.菜单.Item("qxq", true).GetValue<Boolean>() && Q.IsReady())
             {
                 foreach (var minion in Minions.Where(x => x.Health <= Q.GetDamage(x)))
                 {
@@ -383,7 +413,7 @@ namespace Flowers滑板鞋_重生_
                             break;
                     }
 
-                    if (killcount >= KalistaM.菜单.Item("qxqqq").GetValue<Slider>().Value)
+                    if (killcount >= KalistaM.菜单.Item("qxqqq",true).GetValue<Slider>().Value)
                     {
                         if (!Player.IsWindingUp && !Player.IsDashing())
                         {
@@ -391,11 +421,11 @@ namespace Flowers滑板鞋_重生_
                             break;
                         }
                     }
-                    if (KalistaM.菜单.Item("qxe").GetValue<bool>() && E.IsReady())
+                    if (KalistaM.菜单.Item("qxe", true).GetValue<Boolean>() && E.IsReady())
                     {
                         var minionkillcount = 0;
                         foreach (var Minion in Minions.Where(x => E.CanCast(x) && x.Health <= E.GetDamage(x))) { minionkillcount++; }
-                        if (minionkillcount >= KalistaM.菜单.Item("qxeee").GetValue<Slider>().Value)
+                        if (minionkillcount >= KalistaM.菜单.Item("qxeee",true).GetValue<Slider>().Value)
                             E.Cast();
                     }
                 }
@@ -414,51 +444,33 @@ namespace Flowers滑板鞋_重生_
 
             input.CollisionObjects[0] = CollisionableObjects.Minions;
 
-            return LeagueSharp.Common.Collision.GetCollision(new List<Vector3> { targetposition }, input).OrderBy(obj => obj.Distance(source, false)).ToList();
-        }
-
-        private static void 连招E击杀()
-        {
-            if (!KalistaM.菜单.Item("lzeee").GetValue<bool>() || !E.IsReady())
-            {
-                return;
-            }
-
-            var target = HeroManager.Enemies.FirstOrDefault(x => !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield) && E.CanCast(x) && (x.Health + (x.HPRegenRate / 2)) <= E.GetDamage(x));
-
-            if (E.CanCast(target))
-            {
-                E.Cast();
-            }
+            return LeagueSharp.Common.Collision.GetCollision(new List<Vector3> 
+            { targetposition }, input).OrderBy(obj => obj.Distance(source, true)).ToList();
         }
 
         private static void E抢野怪()
         {
-            if (!KalistaM.菜单.Item("eqiangyeguai").GetValue<bool>() || !E.IsReady())
+            if (!KalistaM.菜单.Item("eqiangyeguai", true).GetValue<Boolean>() || !E.IsReady())
             {
                 return;
             }
 
-            var Mob = MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.Health + (x.HPRegenRate / 2) <= E.GetDamage(x));
-
-            if (E.CanCast(Mob))
-            {
+            if (MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Neutral, 
+                MinionOrderTypes.MaxHealth).Any(x => E.IsKillable(x)))
                 E.Cast();
-            }
 
-            var Minion = MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.MaxHealth).FirstOrDefault(x => x.Health <= E.GetDamage(x) && (x.SkinName.ToLower().Contains("siege") || x.SkinName.ToLower().Contains("super")));
-
-            if (E.CanCast(Minion))
-            {
+            if (MinionManager.GetMinions(Player.ServerPosition, E.Range, MinionTypes.All, MinionTeam.Enemy,
+                MinionOrderTypes.MaxHealth).Any(x => E.IsKillable(x) && (x.SkinName.ToLower().Contains("siege") 
+                    || x.SkinName.ToLower().Contains("super"))))
                 E.Cast();
-            }
         }
 
         private static void 自动E()
         {
-            var 敌人 = HeroManager.Enemies.Where(o => o.HasBuffOfType(BuffType.SpellShield)).OrderBy(o => o.Distance(Player, true)).FirstOrDefault();
+            var 敌人 = HeroManager.Enemies.Where(o => o.HasBuffOfType(BuffType.SpellShield)).OrderBy(o => 
+                o.Distance(Player, true)).FirstOrDefault();
 
-            if (!KalistaM.菜单.Item("DamageExxx").GetValue<bool>() || !E.IsReady())
+            if (!KalistaM.菜单.Item("DamageExxx", true).GetValue<Boolean>() || !E.IsReady())
             {
                 if (敌人 != null)
                 {
@@ -472,49 +484,18 @@ namespace Flowers滑板鞋_重生_
                     }
                 }
             }
+
+            if (MinionManager.GetMinions(E.Range, MinionTypes.All, MinionTeam.Enemy).Any(x => E.IsKillable(x))
+                && HeroManager.Enemies.Any(x => x.IsValidTarget(E.Range) && E.GetDamage(x) >= 1 &&
+                    !x.HasBuffOfType(BuffType.Invulnerability) && !x.HasBuffOfType(BuffType.SpellShield)))
+            {
+                E.Cast();
+            }
         }
 
-    /*    private static void Balista()
-        {
-
-            if (Player.IsDead || !KalistaM.菜单.Item("useToggle").GetValue<bool>() &&
-                !KalistaM.菜单.Item("useOnComboKey").GetValue<KeyBind>().Active || !R.IsReady()) return;
-
-            var blitzfriend =
-                ObjectManager.Get<Obj_AI_Hero>()
-                    .SingleOrDefault(
-                        x =>
-                            x.IsAlly && Player.Distance(x.ServerPosition) < KalistaM.菜单.Item("maxRange", true).GetValue<Slider>().Value &&
-                            Player.Distance(x.ServerPosition) >= KalistaM.菜单.Item("minRange", true).GetValue<Slider>().Value &&
-                            x.ChampionName == "Blitzcrank");
-
-            if (blitzfriend == null)
-                return;
-
-
-            foreach (Obj_AI_Hero enem in ObjectManager.Get<Obj_AI_Hero>().Where(enem => enem.IsValid && enem.IsEnemy && enem.Distance(Player,true) <= 2450f)) //+950f is blitz Q range.
-            {
-                if (KalistaM.菜单.Item("target" + enem.ChampionName).GetValue<bool>() && enem.Health > 200)
-                {
-                    if (enem.Buffs != null)
-                    {
-                        for (int i = 0; i < enem.Buffs.Count(); i++)
-                        {
-                            if (enem.Buffs[i].Name == "rocketgrab2" && enem.Buffs[i].IsActive)
-                            {
-                                if (R.IsReady())
-                                {
-                                    R.Cast(KalistaM.菜单.Item("usePackets").GetValue<bool>());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
         private static void 逃跑()
         {
-            var 逃跑 = KalistaM.菜单.Item("Flee").GetValue<KeyBind>().Active;
+            var 逃跑 = KalistaM.菜单.Item("Flee",true).GetValue<KeyBind>().Active;
             var Target = Vector3.Zero;
             var FleePosition = Vector3.Zero;
             var InitTime = 0;
@@ -631,12 +612,12 @@ namespace Flowers滑板鞋_重生_
 
                     if (!jumpTriggered)
                     {
-                        Orbwalking.Orbwalk(target, movePosition, 90f, 0f, false, false);
+                        Orbwalking.Orbwalk(target, movePosition, 90f, 0f, true, true);
                     }
                 }
                 else
                 {
-                    Orbwalking.Orbwalk(target, movePosition, 90f, 0f, false, false);
+                    Orbwalking.Orbwalk(target, movePosition, 90f, 0f, true, true);
                 }
             }
         }

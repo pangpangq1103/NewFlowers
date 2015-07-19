@@ -7,7 +7,7 @@ using Color = System.Drawing.Color;
 
 namespace Flowers滑板鞋_重生_
 {
-    class DamageIndicator //by xSalice Modify the By xcsoft
+    class DamageIndicator //by xSalice
     {
         public delegate float DamageToUnitDelegate(Obj_AI_Hero hero);
 
