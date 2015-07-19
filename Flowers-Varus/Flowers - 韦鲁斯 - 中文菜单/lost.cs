@@ -33,9 +33,9 @@ namespace Flowers___Varus
         }
         public const string ChampionName = "Varus";
         public static Orbwalking.Orbwalker Orbwalker;
-        public static readonly Item 弯刀 = ItemData.Bilgewater_Cutlass.GetItem();
-        public static readonly Item 破败 = ItemData.Blade_of_the_Ruined_King.GetItem();
-        public static readonly Item 幽梦 = ItemData.Youmuus_Ghostblade.GetItem();
+        public static readonly Item 弯刀 = LeagueSharp.Common.Data.ItemData.Bilgewater_Cutlass.GetItem();
+        public static readonly Item 破败 = LeagueSharp.Common.Data.ItemData.Blade_of_the_Ruined_King.GetItem();
+        public static readonly Item 幽梦 = LeagueSharp.Common.Data.ItemData.Youmuus_Ghostblade.GetItem();
 
         public static void Game_OnGameLoad(EventArgs args)
         {
