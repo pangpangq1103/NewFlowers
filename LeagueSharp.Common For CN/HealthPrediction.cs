@@ -36,6 +36,7 @@ namespace LeagueSharp.Common
     public class HealthPrediction
     {
         private static readonly Dictionary<int, PredictedDamage> ActiveAttacks = new Dictionary<int, PredictedDamage>();
+        private static int LastTick;
 
         static HealthPrediction()
         {
@@ -46,10 +47,13 @@ namespace LeagueSharp.Common
 
         private static void Game_OnGameUpdate(EventArgs args)
         {
+            if (Utils.花边TickCount - LastTick <= 60 * 1000)
+                return;
             ActiveAttacks.ToList()
-                .Where(pair => pair.Value.StartTick < Utils.GameTimeTickCount - 3000)
+                .Where(pair => pair.Value.StartTick < Utils.花边TickCount - 60 * 1000)
                 .ToList()
                 .ForEach(pair => ActiveAttacks.Remove(pair.Key));
+            LastTick = Utils.花边TickCount;
         }
 
         private static void SpellbookOnStopCast(Spellbook spellbook, SpellbookStopCastEventArgs args)
@@ -101,7 +105,7 @@ namespace LeagueSharp.Common
                     var landTime = attack.StartTick + attack.Delay +
                                    1000 * unit.Distance(attack.Source) / attack.ProjectileSpeed + delay;
 
-                    if (Utils.GameTimeTickCount < landTime - delay && landTime < Utils.GameTimeTickCount + time)
+                    if (Utils.花边TickCount < landTime - delay && landTime < Utils.花边TickCount + time)
                     {
                         attackDamage = attack.Damage;
                     }
@@ -123,16 +127,16 @@ namespace LeagueSharp.Common
             foreach (var attack in ActiveAttacks.Values)
             {
                 var n = 0;
-                if (Utils.GameTimeTickCount - 100 <= attack.StartTick + attack.AnimationTime &&
+                if (Utils.花边TickCount - 100 <= attack.StartTick + attack.AnimationTime &&
                     attack.Target.IsValidTarget(float.MaxValue, false) &&
                     attack.Source.IsValidTarget(float.MaxValue, false) && attack.Target.NetworkId == unit.NetworkId)
                 {
                     var fromT = attack.StartTick;
-                    var toT = Utils.GameTimeTickCount + time;
+                    var toT = Utils.花边TickCount + time;
 
                     while (fromT < toT)
                     {
-                        if (fromT >= Utils.GameTimeTickCount &&
+                        if (fromT >= Utils.花边TickCount &&
                             (fromT + attack.Delay + unit.Distance(attack.Source) / attack.ProjectileSpeed < toT))
                         {
                             n++;

@@ -181,7 +181,15 @@ namespace LeagueSharp.Common
         {
             get { return Environment.TickCount & int.MaxValue; }
         }
+        private static DateTime LoadTime = DateTime.Now;
 
+        public static int 花边TickCount
+        {
+            get 
+            {
+                return (int)DateTime.Now.Subtract(LoadTime).TotalMilliseconds; 
+            }
+        }
         /// <summary>
         ///     Returns the cursor position on the screen.
         /// </summary>
