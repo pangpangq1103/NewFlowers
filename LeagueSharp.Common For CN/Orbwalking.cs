@@ -86,7 +86,7 @@ namespace LeagueSharp.Common
 
         // Champs whose auto attacks can't be cancelled
         private static readonly string[] NoCancelChamps = { "Kalista" };
-        public static int LastAATick;
+        //public static int LastAATick;
         public static bool Attack = true;
         public static bool DisableNextAttack;
         public static bool Move = true;
@@ -99,6 +99,10 @@ namespace LeagueSharp.Common
         private static bool _missileLaunched;
         private static readonly Random _random = new Random(DateTime.Now.Millisecond);
 
+        public static int castBlockTime = 0;
+        public static int LastAATick = Utils.花边TickCount;
+        public static float LastAADelay = 0;
+        public static float LastAACastDelay = 0;
         static Orbwalking()
         {
             Player = ObjectManager.Player;
@@ -243,7 +247,13 @@ namespace LeagueSharp.Common
         /// </summary>
         public static bool CanAttack()
         {
-            return Utils.GameTimeTickCount + Game.Ping / 2 + 25 >= LastAATick + Player.AttackDelay * 1000 && Attack;
+            var AADelay = Math.Max(LastAADelay, Player.AttackDelay * 10000);
+
+            if (LastAATick <= Utils.花边TickCount && castBlockTime <= Utils.花边TickCount && !Player.IsDashing())
+            {
+                return Utils.花边TickCount + Game.Ping / 2 + 25 >= LastAATick + Player.AttackDelay * 1000 && Attack;
+            }
+            return false;
         }
 
         /// <summary>
@@ -260,8 +270,14 @@ namespace LeagueSharp.Common
             {
                 return true;
             }
-
-            return NoCancelChamps.Contains(Player.ChampionName) || (Utils.GameTimeTickCount + Game.Ping / 2 >= LastAATick + Player.AttackCastDelay * 1000 + extraWindup);
+            var AACastDelay = Math.Max(LastAACastDelay, Player.AttackCastDelay * 1000);
+            if (LastAATick <= Utils.花边TickCount)
+            {
+                return NoCancelChamps.Contains(Player.ChampionName) 
+                    || (Utils.花边TickCount + Game.Ping / 2 >=
+                    LastAATick + AACastDelay + extraWindup);
+            }
+            return false;
         }
 
         public static void SetMovementDelay(int delay)
@@ -290,12 +306,12 @@ namespace LeagueSharp.Common
             bool useFixedDistance = true,
             bool randomizeMinDistance = true)
         {
-            if (Utils.GameTimeTickCount - LastMoveCommandT < _delay && !overrideTimer)
+            if (Utils.花边TickCount - LastMoveCommandT < _delay && !overrideTimer)
             {
                 return;
             }
 
-            LastMoveCommandT = Utils.GameTimeTickCount;
+            LastMoveCommandT = Utils.花边TickCount;
 
             if (Player.ServerPosition.Distance(position, true) < holdAreaRadius * holdAreaRadius)
             {
@@ -355,7 +371,9 @@ namespace LeagueSharp.Common
                     {
                         if (!NoCancelChamps.Contains(Player.ChampionName))
                         {
-                            LastAATick = Utils.GameTimeTickCount + Game.Ping + 100 - (int)(ObjectManager.Player.AttackCastDelay * 1000f);
+
+                            LastAATick = Utils.花边TickCount + Game.Ping + 100 - (int)
+                                (ObjectManager.Player.AttackCastDelay * 1000f);
                             _missileLaunched = false;
                         }
                         Player.IssueOrder(GameObjectOrder.AttackUnit, target);
@@ -417,9 +435,10 @@ namespace LeagueSharp.Common
                 }
 
                 if (unit.IsMe &&
-                    (Spell.Target is Obj_AI_Base || Spell.Target is Obj_BarracksDampener || Spell.Target is Obj_HQ))
+                    (Spell.Target is Obj_AI_Base || Spell.Target is Obj_BarracksDampener 
+                    || Spell.Target is Obj_HQ))
                 {
-                    LastAATick = Utils.GameTimeTickCount - Game.Ping / 2;
+                    LastAATick = Utils.花边TickCount - Game.Ping / 2;
                     _missileLaunched = false;
 
                     if (Spell.Target is Obj_AI_Base)
@@ -433,7 +452,8 @@ namespace LeagueSharp.Common
 
                         //Trigger it for ranged until the missiles catch normal attacks again!
                         Utility.DelayAction.Add(
-                            (int)(unit.AttackCastDelay * 1000 + 40), () => FireAfterAttack(unit, _lastTarget));
+                            (int)(unit.AttackCastDelay * 1000 + 30), 
+                            () => FireAfterAttack(unit, _lastTarget));
                     }
                 }
 

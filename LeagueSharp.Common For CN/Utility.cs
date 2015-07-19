@@ -128,7 +128,7 @@ namespace LeagueSharp.Common
         /// <summary>
         ///     Returns the unit's health percentage (From 0 to 100).
         /// </summary>
-        [Obsolete("Use HealthPercent attribute.", false)]
+        
         public static float HealthPercentage(this Obj_AI_Base unit)
         {
             return unit.Health / unit.MaxHealth * 100;
@@ -137,7 +137,7 @@ namespace LeagueSharp.Common
         /// <summary>
         ///     Returns the unit's mana percentage (From 0 to 100).
         /// </summary>
-        [Obsolete("Use ManaPercent attribute.", false)]
+        
         public static float ManaPercentage(this Obj_AI_Base unit)
         {
             return unit.Mana / unit.MaxMana * 100;
@@ -619,7 +619,7 @@ namespace LeagueSharp.Common
             {
                 for (var i = ActionList.Count - 1; i >= 0; i--)
                 {
-                    if (ActionList[i].Time <= Utils.GameTimeTickCount)
+                    if (ActionList[i].Time <= Utils.花边TickCount)
                     {
                         try
                         {
@@ -652,7 +652,7 @@ namespace LeagueSharp.Common
 
                 public Action(int time, Callback callback)
                 {
-                    Time = time + Utils.GameTimeTickCount;
+                    Time = time + Utils.花边TickCount;
                     CallbackObject = callback;
                 }
             }
