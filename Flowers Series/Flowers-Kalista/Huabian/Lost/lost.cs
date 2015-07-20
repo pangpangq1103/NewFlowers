@@ -68,11 +68,9 @@ namespace Flowers滑板鞋_重生_
                 return;
             }
 
-            Notifications.AddNotification("Flowers Kalista by NightMoon", 1000);
-            Notifications.AddNotification("`                  And  Lost`", 1000);
-            Notifications.AddNotification("Version : 1.0.0.3", 1000);
-            Game.PrintChat("Flowers-Kalista Loaded!~~~ Version : 1.0.0.3 Thanks for your use!");
-            Game.PrintChat("婊戜綘楹荤椆璧剁揣鍘诲棬 - By 鑺辫竟 ");
+            Notifications.AddNotification("Flowers Kalista by NightMoon", 2000);
+            Notifications.AddNotification("`                  And  Lost`", 2000);
+            Notifications.AddNotification("Version : 1.0.0.4", 2000);
             Q = new Spell(SpellSlot.Q, 1160f);
             W = new Spell(SpellSlot.W, 5000f);
             E = new Spell(SpellSlot.E, 1000f);
@@ -98,7 +96,7 @@ namespace Flowers滑板鞋_重生_
             {
                 if (sender.Type == GameObjectType.obj_AI_Hero && sender.IsEnemy)
                 {
-                    var soulbound = HeroManager.Allies.FirstOrDefault(hero => hero.HasBuff("kalistacoopstrikeally", true) && args.Target.NetworkId == hero.NetworkId && hero.HealthPercent <= KalistaM.菜单.Item("jilaohp").GetValue<Slider>().Value);
+                    var soulbound = HeroManager.Allies.FirstOrDefault(hero => hero.HasBuff("kalistacoopstrikeally") && args.Target.NetworkId == hero.NetworkId && hero.HealthPercent <= KalistaM.菜单.Item("jilaohp").GetValue<Slider>().Value);
 
                     if (soulbound != null)
                         R.Cast();
@@ -112,7 +110,6 @@ namespace Flowers滑板鞋_重生_
 
             if (E.IsReady() && KalistaM.菜单.Item("DrawEDamage", true).GetValue<Boolean>())
                 damage += E.GetDamage(hero); 
-            Color.FromArgb(255, 255, 255);
 
             return damage;
         }
@@ -263,6 +260,133 @@ namespace Flowers滑板鞋_重生_
             自动E();
             逃跑();
             KSE();
+            自动W();
+            OutOfRangeE();
+            KillSteal();
+        }
+
+        private static void KillSteal()
+        {
+            if (!KalistaM.菜单.Item("KillSteal", true).GetValue<Boolean>())
+            {
+                return;
+            }
+            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>().Where(h => Q.CanCast(h) || E.CanCast(h)))
+            {
+                if (hasundyingbuff(enemy)) { continue; }
+                var edmg = E.GetDamage(enemy);
+                var enemyhealth = enemy.Health;
+                var enemyregen = enemy.HPRegenRate / 2;
+                if (((enemyhealth + enemyregen) <= edmg) && E.CanCast(enemy) && !hasundyingbuff(enemy))
+                {
+                    E.Cast(); 
+                    return; 
+                }
+                if (Q.GetPrediction(enemy).Hitchance >= HitChance.High && Q.CanCast(enemy))
+                {
+                    var qdamage = Player.GetSpellDamage(enemy, SpellSlot.Q);
+                    if ((qdamage + edmg) >= (enemyhealth + enemyregen))
+                    {
+                        Q.Cast(enemy);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private static bool hasundyingbuff(Obj_AI_Hero enemy)
+        {
+            var hasbuff = HeroManager.Enemies.Find(a =>
+                enemy.CharData.BaseSkinName == a.CharData.BaseSkinName && a.Buffs.Any(b =>
+                    b.Name.ToLower().Contains("undying rage") ||
+                    b.Name.ToLower().Contains("chrono shift") ||
+                    b.Name.ToLower().Contains("judicatorintervention") ||
+                    b.Name.ToLower().Contains("poppyditarget")));
+            if (hasbuff != null) { return true; }
+            return false;
+        }
+
+        private static void OutOfRangeE()
+        {
+               if (!KalistaM.菜单.Item("harassEoutOfRange", true).GetValue<Boolean>()) 
+               {
+                var Minions = MinionManager.GetMinions(Player.ServerPosition, R.Range, MinionTypes.All, MinionTeam.NotAlly)
+                    .FindAll(x => (x.Health + (x.HPRegenRate / 2)) < E.GetDamage(x) && E
+                   .CanCast(x));
+                if (Minions != null) 
+                {
+                    var enemy = HeroManager.Enemies.Find(x => E.CanCast(x));
+                    if (enemy != null) 
+                    E.Cast(); 
+                }
+               }
+        }
+
+        public static float? autoWtimers;
+        private static void 自动W()
+        {
+            var useW = KalistaM.菜单.Item("AutoW", true).GetValue<Boolean>();
+            if (useW && W.IsReady()) {
+                if (autoWtimers != null) {
+                    if ((Game.ClockTime - autoWtimers) > 2) {
+                        autoWtimers = null;
+                    } else { return; }
+                }
+                var closestenemy = HeroManager.Enemies.Find(x => Player.ServerPosition.Distance(x.ServerPosition) 
+                    < KalistaM.菜单.Item("autowenemyclose", true).GetValue<Slider>().Value);
+                if (closestenemy != null) { return; }
+                if ((Player.ManaPercent < 50) || Player.IsDashing() || Player.IsWindingUp || Player.InFountain()) { return; }
+                fillsentinels();
+
+                Random rnd = new Random();
+                var sentineldestinations = _mysentinels.Where(s => !s.Name.Contains("RobotBuddy")).OrderBy(s => rnd.Next()).ToList();
+                foreach (var destinations in sentineldestinations) {
+                    var distancefromme = Vector3.Distance(Player.Position, destinations.Position);
+                    if (sentinelcloserthan(destinations.Position, 1500) == 0 && distancefromme < W.Range) {
+                        autoWtimers = Game.ClockTime;
+                        W.Cast(destinations.Position);
+                        Notifications.AddNotification(new Notification("sending bug to:" + destinations.Name, 5000).SetTextColor(Color.FromArgb(255, 0, 0)));
+                        return;
+                    }
+                }
+            }
+        }
+
+        private static int sentinelcloserthan(Vector3 vector3, int p)
+        {
+            foreach (var xxxXxxx in ObjectManager.Get<AttackableUnit>().Where(obj => obj.Name.Contains("RobotBuddy")))
+            {
+                if (Vector3.Distance(vector3
+                    , xxxXxxx.Position) < p) 
+                return 1;
+            }
+            return 0;
+        }
+        static readonly List<mysentinels> _mysentinels = new List<mysentinels>();
+        internal class mysentinels
+        {
+            public string Name;
+            public Vector3 Position;
+            public mysentinels(string name, Vector3 position)
+            {
+                Name = name;
+                Position = position;
+            }
+        }
+        private static void fillsentinels()
+        {
+            _mysentinels.Clear();
+            foreach (var xxxXxxx in ObjectManager.Get<AttackableUnit>().Where(obj => obj.Name.Contains("RobotBuddy")))
+            {
+                _mysentinels.Add(new mysentinels("RobotBuddy", xxxXxxx.Position));
+            }
+            _mysentinels.Add(new mysentinels("Blue Camp Blue Buff", (Vector3)SummonersRift.Jungle.Blue_BlueBuff));
+            _mysentinels.Add(new mysentinels("Blue Camp Red Buff", (Vector3)SummonersRift.Jungle.Blue_RedBuff));
+            _mysentinels.Add(new mysentinels("Red Camp Blue Buff", (Vector3)SummonersRift.Jungle.Red_BlueBuff));
+            _mysentinels.Add(new mysentinels("Red Camp Red Buff", (Vector3)SummonersRift.Jungle.Red_RedBuff));
+            _mysentinels.Add(new mysentinels("Dragon", (Vector3)SummonersRift.River.Dragon));
+            _mysentinels.Add(new mysentinels("Baron", (Vector3)SummonersRift.River.Baron));
+            _mysentinels.Add(new mysentinels("Mid Bot River", new Vector3(8370f, 6176f, -71.2406f)));
         }
 
         private static void KSE()
@@ -405,7 +529,8 @@ namespace Flowers滑板鞋_重生_
                 {
                     var killcount = 0;
 
-                    foreach (var colminion in Q_GetCollisionMinions(Player, Player.ServerPosition.Extend(minion.ServerPosition, Q.Range)))
+                    foreach (var colminion in Q_GetCollisionMinions
+                        (Player, Player.ServerPosition.Extend(minion.ServerPosition, Q.Range)))
                     {
                         if (colminion.Health <= Q.GetDamage(colminion))
                             killcount++;
@@ -417,17 +542,17 @@ namespace Flowers滑板鞋_重生_
                     {
                         if (!Player.IsWindingUp && !Player.IsDashing())
                         {
-                            Q.Cast(minion);
+                            Q.Cast(minion.ServerPosition);
                             break;
                         }
                     }
                     if (KalistaM.菜单.Item("qxe", true).GetValue<Boolean>() && E.IsReady())
                     {
-                        var minionkillcount = 0;
-                        foreach (var Minion in Minions.Where(x => E.CanCast(x) && x.Health <= E.GetDamage(x))) { minionkillcount++; }
-                        if (minionkillcount >= KalistaM.菜单.Item("qxeee",true).GetValue<Slider>().Value)
-                            E.Cast();
+                        return;
                     }
+                    var minionkillcount = Minions.Count(x => E.CanCast(x) && x.Health <= E.GetDamage(x));
+                    if (minionkillcount >= KalistaM.菜单.Item("qxeee", true).GetValue<Slider>().Value)
+                        E.Cast();
                 }
             }
         }
@@ -444,8 +569,9 @@ namespace Flowers滑板鞋_重生_
 
             input.CollisionObjects[0] = CollisionableObjects.Minions;
 
-            return LeagueSharp.Common.Collision.GetCollision(new List<Vector3> 
-            { targetposition }, input).OrderBy(obj => obj.Distance(source, true)).ToList();
+            return LeagueSharp.Common.Collision.GetCollision
+                (new List<Vector3> { targetposition }, input)
+                .OrderBy(obj => obj.Distance(source, false)).ToList();
         }
 
         private static void E抢野怪()

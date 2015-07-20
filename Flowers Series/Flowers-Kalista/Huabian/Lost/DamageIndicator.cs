@@ -40,12 +40,11 @@ namespace Flowers滑板鞋_重生_
         }
         public static void Initialize(Utility.HpBarDamageIndicator.DamageToUnitDelegate damageToUnit)
         {
-            Enabled = false;
             Drawing.OnDraw += Drawing_OnDraw;
         }
         private static void Drawing_OnDraw(EventArgs args)
         {
-            if (!Enabled || _damageToUnit == null)
+            if (!KalistaM.菜单.Item("DrawEDamage").GetValue<Boolean>() || _damageToUnit == null)
             {
                 return;
             }
