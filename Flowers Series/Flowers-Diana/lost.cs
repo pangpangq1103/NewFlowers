@@ -462,7 +462,8 @@ namespace FlowersDiana
         private static void checkCombo(Obj_AI_Hero target, bool targetBuff)
         {
             if (R.GetDamage(target) >= target.Health && R.IsReady() &&
-                R.CanCast(target) && Player.Distance(target.Position) <= R.Range && isTrue("useR"))
+                R.CanCast(target) && Player.Distance(target.Position) <= R.Range && isTrue("useR") || 
+                target.HasBuff("dianamoonlight"))
             {
                 R.Cast(target);
 

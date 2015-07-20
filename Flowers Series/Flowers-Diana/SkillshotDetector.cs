@@ -227,7 +227,7 @@ namespace FlowersDiana
 
                         foreach (var m in ObjectManager.Get<Obj_AI_Minion>())
                         {
-                            if (m.BaseSkinName == "jarvanivstandard" && m.Team == skillshot.Unit.Team)
+                            if (m.CharData.BaseSkinName == "jarvanivstandard" && m.Team == skillshot.Unit.Team)
                             {
 
                                 var extendedE = new Skillshot(
