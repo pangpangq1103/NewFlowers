@@ -45,6 +45,7 @@ namespace Riven
             菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingAA", "Real AA Range(OKTW© Style)").SetValue(true));
             菜单.SubMenu("Drawing").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
 
+            菜单.AddToMainMenu();
         }
     }
 }
