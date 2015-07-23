@@ -300,7 +300,7 @@ namespace FlowersDiana
                 {
                     var mobs = MinionManager.GetMinions(
                     ObjectManager.Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.Neutral,
-                        MinionOrderTypes.MaxHealth);
+                        MinionOrderTypes.MaxHealth).Where(x => x.IsValidTarget() && !x.IsDead).OrderBy(x => -x.MaxHealth);
 
                     if (mobs.Any(x => x.Distance(Player.Position) <= 500))
                         junClear();
@@ -553,8 +553,7 @@ namespace FlowersDiana
             var rMana = new[] { 0, 50, 65, 80 };
 
             if (isTrue("useWAutoShieldSkillShot") &&
-                    skill.SpellData.DangerValue >= getValue("useWAutoShieldSkillShot_DangerLvl")
-                    && skill.SpellData.DangerValue < 5 && W.IsReady() && W.Level > 0 &&
+                skill.SpellData.DangerValue == 5 && W.IsReady() && W.Level > 0 &&
                     Player.Mana >= wMana[W.Level])
             {
                 if (skill.IsAboutToHit(timeLeft, Player) && timeLeft > W.Delay)
