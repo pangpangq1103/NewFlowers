@@ -59,19 +59,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collision.cs" />
-    <Compile Include="EvadeSpellData.cs" />
-    <Compile Include="EvadeSpellDatabase.cs" />
-    <Compile Include="Geometry.cs" />
+    <Compile Include="H7Evade.cs" />
     <Compile Include="huabian.cs" />
     <Compile Include="lost.cs" />
     <Compile Include="Load.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Skillshot.cs" />
-    <Compile Include="SkillshotDetector.cs" />
-    <Compile Include="SkillshotsResult.cs" />
-    <Compile Include="SpellData.cs" />
-    <Compile Include="SpellDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
