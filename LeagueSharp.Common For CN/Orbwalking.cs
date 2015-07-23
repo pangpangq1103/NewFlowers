@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SharpDX;
 using Color = System.Drawing.Color;
+using SharpDX.Direct3D9;
 
 #endregion
 
@@ -769,8 +770,9 @@ namespace LeagueSharp.Common
                         ObjectManager.Get<Obj_AI_Minion>()
                             .Where(
                                 mob =>
-                                    mob.IsValidTarget() && InAutoAttackRange(mob) && mob.Team == GameObjectTeam.Neutral)
-                            .MaxOrDefault(mob => mob.MaxHealth);
+                                    mob.IsValidTarget() && mob.Team == GameObjectTeam.Neutral &&
+                                    InAutoAttackRange(mob) && mob.CharData.BaseSkinName != "gangplankbarrel")
+                                    .MaxOrDefault(mob => mob.MaxHealth);
                     if (result != null)
                     {
                         return result;
