@@ -154,11 +154,6 @@ namespace Flowers_TwitchFate
         {
             var disdraw = 菜单.Item("drawoff").GetValue<bool>();
 
-            if (Player.IsDead)
-            {
-                return;
-            }
-
             if (disdraw)
             {
                 return;
