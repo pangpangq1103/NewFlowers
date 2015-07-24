@@ -90,7 +90,7 @@ namespace Flowers_TwitchFate
             菜单.SubMenu("Draw").AddItem(new MenuItem("drawingQ", "Q Range").SetValue(new Circle(true, Color.FromArgb(138, 101, 255))));
             菜单.SubMenu("Draw").AddItem(new MenuItem("drawingR", "R Range").SetValue(new Circle(true, Color.FromArgb(0, 255, 0))));
             菜单.SubMenu("Draw").AddItem(new MenuItem("drawingR2", "R Range (MiniMap)").SetValue(new Circle(true, Color.FromArgb(255, 255, 255))));
-            菜单.SubMenu("Draw").AddItem(new MenuItem("drawingAA", "Real AA Range(花边 Style)").SetValue(true));
+            菜单.SubMenu("Draw").AddItem(new MenuItem("drawingAA", "Real AA&W Range(花边 Style)").SetValue(true));
             菜单.SubMenu("Draw").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
 
             菜单.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
@@ -166,8 +166,6 @@ namespace Flowers_TwitchFate
 
             if (FlowersStyle)
             {
-                if (W.IsReady())
-                {
                     Color FlowersAAStyle = Color.LightGreen;
                     var Wbuff = Player.Spellbook.GetSpell(SpellSlot.W).Name;
                     if(Wbuff == "goldcardlock")
@@ -188,7 +186,6 @@ namespace Flowers_TwitchFate
                     }
 
                     Render.Circle.DrawCircle(Player.Position, Orbwalking.GetRealAutoAttackRange(Player), FlowersAAStyle ,2);
-                }
             }
 
             if (AA目标OKTWStyle)
