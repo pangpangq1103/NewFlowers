@@ -44,7 +44,7 @@ namespace Flowers_TwitchFate
 
             Notifications.AddNotification("Flowers Twisted by NightMoon", 1000);
             Notifications.AddNotification("`                  And  Lost`", 1000);
-            Notifications.AddNotification("Version : 1.0.0.1", 1000);
+            Notifications.AddNotification("Version : 1.0.0.2", 1000);
 
             菜单 = new Menu("FL - Twisted Fate", "flowersKappa", true);
 
@@ -62,7 +62,7 @@ namespace Flowers_TwitchFate
 
             菜单.AddSubMenu(new Menu("Harass", "Harass"));
             菜单.SubMenu("Harass").AddItem(new MenuItem("srq", "Use Q")).SetValue(true);
-            菜单.SubMenu("Harass").AddItem(new MenuItem("AutoQ", "Auto Q").SetValue(new KeyBind("U".ToCharArray()[0], KeyBindType.Press)));
+            菜单.SubMenu("Harass").AddItem(new MenuItem("AutoQ", "Auto Q").SetValue(new KeyBind("U".ToCharArray()[0], KeyBindType.Toggle)));
             菜单.SubMenu("Harass").AddItem(new MenuItem("srw", "Use W(Blue Card)")).SetValue(true);
             菜单.SubMenu("Harass").AddItem(new MenuItem("srwr", "Use W(Red Card)")).SetValue(true);
 
