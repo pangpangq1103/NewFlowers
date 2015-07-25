@@ -44,7 +44,7 @@ namespace Flowers_TwitchFate
 
             Notifications.AddNotification("Flowers Twisted by NightMoon", 1000);
             Notifications.AddNotification("`                  And  Lost`", 1000);
-            Notifications.AddNotification("Version : 1.0.0.2", 1000);
+            Notifications.AddNotification("Version : 1.0.0.3", 1000);
 
             菜单 = new Menu("FL - Twisted Fate", "flowersKappa", true);
 
@@ -67,8 +67,12 @@ namespace Flowers_TwitchFate
             菜单.SubMenu("Harass").AddItem(new MenuItem("srwr", "Use W(Red Card)")).SetValue(true);
 
             菜单.AddSubMenu(new Menu("Clear", "Clear"));
-            菜单.SubMenu("Clear").AddItem(new MenuItem("qxq", "Use Q").SetValue(true));
-            菜单.SubMenu("Clear").AddItem(new MenuItem("qxw", "Use W(Red or Blue)").SetValue(true));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qxq", "Use Q LaneClear").SetValue(true));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qxw", "Use W LaneClear (Red or Blue)").SetValue(true));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qxmp", "LC Use Blue Mana <=%", true).SetValue(new Slider(45, 0, 100)));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qyq", "Use Q JungleClear").SetValue(true));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qyw", "Use W JungleClear (Red or Blue)").SetValue(true));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qymp", "JC Use Blue Mana <=%", true).SetValue(new Slider(45, 0, 100)));
 
             菜单.AddSubMenu(new Menu("Card Select", "CardSelect"));
             菜单.SubMenu("CardSelect").AddItem(new MenuItem("blue", "Blue Card").SetValue(new KeyBind("E".ToCharArray()[0], KeyBindType.Press)));
@@ -94,7 +98,7 @@ namespace Flowers_TwitchFate
             菜单.SubMenu("Draw").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
 
             菜单.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
-            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.2"));
+            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.3"));
 
             菜单.AddToMainMenu();
 
@@ -332,9 +336,8 @@ namespace Flowers_TwitchFate
 
         static void 清线()
         {
-            var 使用Q = 菜单.Item("qxq").GetValue<bool>();
 
-            if (Q.IsReady() && 使用Q && getManaPer > 45)
+            if (Q.IsReady() && 菜单.Item("qxq").GetValue<bool>() && getManaPer > 40)
             {
                 var allMinionsQ = MinionManager.GetMinions(Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.Enemy);
                 var locQ = Q.GetLineFarmLocation(allMinionsQ);
@@ -345,9 +348,9 @@ namespace Flowers_TwitchFate
 
             var minioncount = MinionManager.GetMinions(Player.Position, 1500).Count;
 
-            if (minioncount > 0)
+            if (minioncount > 0 && 菜单.Item("qxw").GetValue<bool>())
             {
-                if (getManaPer > 45)
+                if (getManaPer > 菜单.Item("qxmp").GetValue<Slider>().Value)
                 {
                     if (minioncount >= 3)
                         CardSelect.StartSelecting(Cards.Red);
@@ -361,8 +364,6 @@ namespace Flowers_TwitchFate
 
         static void 清野()
         {
-            var 使用Q = 菜单.Item("qxq").GetValue<bool>();
-            var Clear = 菜单.Item("qxw").GetValue<bool>();
 
             var mobs = MinionManager.GetMinions(Player.ServerPosition, Orbwalking.GetRealAutoAttackRange(Player) + 50,
                 MinionTypes.All, MinionTeam.Neutral, MinionOrderTypes.MaxHealth);
@@ -370,14 +371,14 @@ namespace Flowers_TwitchFate
             if (mobs.Count <= 0)
                 return;
 
-            if (Q.IsReady() && 使用Q && getManaPer > 45)
+            if (Q.IsReady() && 菜单.Item("qyq").GetValue<bool>() && getManaPer > 45)
             {
                 Q.Cast(mobs[0].Position);
             }
 
-            if (W.IsReady() && Clear)
+            if (W.IsReady() && 菜单.Item("qyw").GetValue<bool>())
             {
-                if (getManaPer > 45)
+                if (getManaPer > 菜单.Item("qymp").GetValue<Slider>().Value)
                 {
                     if (mobs.Count >= 2)
                         CardSelect.StartSelecting(Cards.Red);
@@ -388,9 +389,8 @@ namespace Flowers_TwitchFate
         }
         static void 自动Q()
         {
-            var QQQ = 菜单.Item("KSQ").GetValue<bool>();
 
-            if (!QQQ)
+            if (!菜单.Item("KSQ").GetValue<bool>())
                 return;
 
             foreach (Obj_AI_Hero target in ObjectManager.Get<Obj_AI_Hero>().Where(x => x.IsValidTarget(Q.Range) && x.IsEnemy 
@@ -406,13 +406,13 @@ namespace Flowers_TwitchFate
                 }
             }
 
-            if (Player.Spellbook.CanUseSpell(SpellSlot.Q) == SpellState.Ready && QQQ)
+            if (Player.Spellbook.CanUseSpell(SpellSlot.Q) == SpellState.Ready && !菜单.Item("KSQ").GetValue<bool>())
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                 {
                     if (enemy.IsValidTarget(Q.Range * 2))
                     {
                         var pred = Q.GetPrediction(enemy);
-                        if ((pred.Hitchance == HitChance.Immobile && QQQ))
+                        if ((pred.Hitchance == HitChance.Immobile && !菜单.Item("KSQ").GetValue<bool>()))
                         {
                             Q.Cast(enemy);
                         }
@@ -420,7 +420,7 @@ namespace Flowers_TwitchFate
                 }
         }
     }
-
+    //  This  is Esk0r CardSelect ~  GitHub:Github.com/Esk0r/LeagueSharp/
     public enum Cards
     {
         Red,
