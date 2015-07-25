@@ -94,7 +94,7 @@ namespace Flowers_TwitchFate
             菜单.SubMenu("Draw").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
 
             菜单.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
-            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.1"));
+            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.2"));
 
             菜单.AddToMainMenu();
 
