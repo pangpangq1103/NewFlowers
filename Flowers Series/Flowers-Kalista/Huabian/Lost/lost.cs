@@ -80,6 +80,7 @@ namespace Flowers滑板鞋_重生_
             R.SetSkillshot(0.50f, 1500, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             KalistaM.KalistaMenu();
+            DamageIndicator.Initialize(lost.显示E伤害);
 
             Game.OnUpdate += 总菜单;
             Drawing.OnDraw += 范围显示;
