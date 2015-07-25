@@ -207,9 +207,6 @@ namespace LeagueSharp.Common
             #endregion
 
             #region Kalista
-
-            if (!Game.Version.Contains("5.12"))
-            {
                 p = new PassiveDamage
                         {
                             ChampionName = "Kalista", IsActive = (source, target) => true,
@@ -219,10 +216,9 @@ namespace LeagueSharp.Common
                                  -source.CalcDamage(
                                      target,
                                      DamageType.Physical,
-                                     0.1d * (source.BaseAttackDamage + source.FlatPhysicalDamageMod))),
+                                     0.1d * (source.BaseAttackDamage + source.FlatPhysicalDamageMod) * 0.9 )),
                         };
                 AttackPassives.Add(p);
-            }
 
             #endregion
 
@@ -1344,7 +1340,7 @@ namespace LeagueSharp.Common
                                 Slot = SpellSlot.Q, DamageType = DamageType.Magical,
                                 Damage =
                                     (source, target, level) =>
-                                    new double[] { 40, 55, 70, 85, 100 }[level]
+                                    new double[] { 40, 50, 60, 70, 80 }[level]
                                     + new double[] { 35, 40, 45, 50, 55 }[level] / 100
                                     * source.FlatMagicDamageMod
                                     + new double[] { 50, 55, 60, 65, 70 }[level] / 100
@@ -2516,7 +2512,7 @@ namespace LeagueSharp.Common
                                                    ((count - 1)
                                                     * (new double[] { 10, 14, 19, 25, 32 }[level]
                                                        + // Base damage per spear
-                                                       new double[] { 0.2, 0.225, 0.25, 0.275, 0.3 }[
+                                                       new double[] { 0.5, 0.5, 0.5, 0.5, 0.5 }[
                                                            level]
                                                        * (source.BaseAttackDamage
                                                           + source.FlatPhysicalDamageMod)));
@@ -3817,7 +3813,7 @@ namespace LeagueSharp.Common
                                 Slot = SpellSlot.Q, DamageType = DamageType.Magical,
                                 Damage =
                                     (source, target, level) =>
-                                    new double[] { 60, 95, 130, 165, 200 }[level]
+                                    new double[] { 60, 85, 110, 135, 160 }[level]
                                     + 0.55 * source.FlatMagicDamageMod
                                     + new double[] { 2, 2.5, 3, 3.5, 4 }[level] / 100 * source.MaxMana
                             },
@@ -3836,8 +3832,8 @@ namespace LeagueSharp.Common
                                 Slot = SpellSlot.E, DamageType = DamageType.Magical,
                                 Damage =
                                     (source, target, level) =>
-                                    new double[] { 50, 66, 82, 98, 114 }[level]
-                                    + 0.3 * source.FlatMagicDamageMod + 0.02 * source.MaxMana
+                                    new double[] { 36, 52, 68, 84, 100 }[level]
+                                    + 0.2 * source.FlatMagicDamageMod + 0.02 * source.MaxMana
                             },
                     });
 
