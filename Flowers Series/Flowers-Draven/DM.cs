@@ -14,7 +14,7 @@ namespace Flowers_Draven
         public static Menu 菜单;
         public static void DMenu()
         {
-            菜单 = new Menu("Flowers-Draven", "Feeeez", true);
+            菜单 = new Menu("Flowers-Draven", "Lost.", true);
 
             var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
             TargetSelector.AddToMenu(targetSelectorMenu);
@@ -71,12 +71,11 @@ namespace Flowers_Draven
             菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingQ", "Q Range").SetValue(new Circle(true, Color.FromArgb(138, 101, 255))));
             菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingE", "E Range").SetValue(new Circle(true, Color.FromArgb(255, 0, 0))));
             菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingR", "R Range").SetValue(new Circle(false, Color.FromArgb(0, 255, 0))));
-            菜单.SubMenu("Drawing").AddItem(new MenuItem("bdxb", "Million LastHit").SetValue(new Circle(true, Color.GreenYellow)));
-            菜单.SubMenu("Drawing").AddItem(new MenuItem("fjkjs", "Millions Can Kill").SetValue(new Circle(true, Color.Gray)));
             菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingAA", "AA Range(OKTW© Style)").SetValue(true));
             菜单.SubMenu("Drawing").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
-            菜单.SubMenu("Drawing").AddItem(new MenuItem("wushangdaye", "Jungle Postion").SetValue(true));
 
+            菜单.AddItem(new MenuItem("Credit", "Credit:NightMoon"));
+            菜单.AddItem(new MenuItem("Version", "Version:1.0.0.2"));
             菜单.AddToMainMenu();
         }
     }

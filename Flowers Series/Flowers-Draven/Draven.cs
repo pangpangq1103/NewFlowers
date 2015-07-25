@@ -70,8 +70,6 @@ namespace Flowers_Draven
             var AA目标OKTWStyle = DM.菜单.Item("orb").GetValue<bool>();
             var Q范围 = DM.菜单.Item("drawingQ").GetValue<Circle>();
             var E范围 = DM.菜单.Item("drawingE").GetValue<Circle>();
-            var 补刀小兵 = DM.菜单.Item("bdxb").GetValue<Circle>();
-            var 附近可击杀 = DM.菜单.Item("fjkjs").GetValue<Circle>();
             var 显示斧头落地点 = DM.菜单.Item("DrawAxeLocation").GetValue<bool>();
             var 显示斧头范围 = DM.菜单.Item("DrawAxeRange").GetValue<bool>();
 
@@ -134,36 +132,6 @@ namespace Flowers_Draven
 
             if (E.IsReady() && E范围.Active)
                 Render.Circle.DrawCircle(Player.Position, E.Range - 30, E范围.Color);
-
-            if (补刀小兵.Active || 附近可击杀.Active)
-            {
-                var xMinions = MinionManager.GetMinions(Player.Position, Player.AttackRange + Player.BoundingRadius + 300, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.MaxHealth);
-
-                foreach (var xMinion in xMinions)
-                {
-                    if (补刀小兵.Active && Player.GetAutoAttackDamage(xMinion) >= xMinion.Health)
-                        Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 补刀小兵.Color, 5);
-                    else if (附近可击杀.Active && Player.GetAutoAttackDamage(xMinion) * 2 >= xMinion.Health)
-                        Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 附近可击杀.Color, 5);
-                }
-            }
-
-            if (Game.MapId == (GameMapId)11 && DM.菜单.Item("wushangdaye").GetValue<bool>())
-            {
-                const float circleRange = 100f;
-
-                Render.Circle.DrawCircle(new Vector3(7461.018f, 3253.575f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :red
-                Render.Circle.DrawCircle(new Vector3(3511.601f, 8745.617f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :blue
-                Render.Circle.DrawCircle(new Vector3(7462.053f, 2489.813f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :golems
-                Render.Circle.DrawCircle(new Vector3(3144.897f, 7106.449f, 51.89026f), circleRange, System.Drawing.Color.Orange, 3); // blue team :wolfs
-                Render.Circle.DrawCircle(new Vector3(7770.341f, 5061.238f, 49.26587f), circleRange, System.Drawing.Color.Orange, 3); // blue team :wariaths
-                Render.Circle.DrawCircle(new Vector3(10930.93f, 5405.83f, -68.72192f), circleRange, System.Drawing.Color.Red, 3); // Dragon
-                Render.Circle.DrawCircle(new Vector3(7326.056f, 11643.01f, 50.21985f), circleRange, System.Drawing.Color.Orange, 3); // red team :red
-                Render.Circle.DrawCircle(new Vector3(11417.6f, 6216.028f, 51.00244f), circleRange, System.Drawing.Color.Orange, 3); // red team :blue
-                Render.Circle.DrawCircle(new Vector3(7368.408f, 12488.37f, 56.47668f), circleRange, System.Drawing.Color.Orange, 3); // red team :golems
-                Render.Circle.DrawCircle(new Vector3(10342.77f, 8896.083f, 51.72742f), circleRange, System.Drawing.Color.Orange, 3); // red team :wolfs
-                Render.Circle.DrawCircle(new Vector3(7001.741f, 9915.717f, 54.02466f), circleRange, System.Drawing.Color.Orange, 3); // red team :wariaths                    
-            }
         }
 
 
@@ -398,8 +366,8 @@ namespace Flowers_Draven
             {
                 Q.Cast();
             }
-            if (qyw && !ObjectManager.Player.HasBuff("dravenfurybuff", true) &&
-                !ObjectManager.Player.HasBuff("dravenfurybuff",true) && W.IsReady() &&
+            if (qyw && !ObjectManager.Player.HasBuff("dravenfurybuff") &&
+                !ObjectManager.Player.HasBuff("dravenfurybuff") && W.IsReady() &&
                 target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Player)))
             {
                 W.Cast();
