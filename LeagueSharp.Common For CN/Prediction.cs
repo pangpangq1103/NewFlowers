@@ -699,6 +699,8 @@ namespace LeagueSharp.Common
                         }
                     }
 
+                    bestCandidate = bestCandidate + input.From.To2D();
+
                     if (bestCandidateHits > 1 && input.From.To2D().Distance(bestCandidate, true) > 50 * 50)
                     {
                         return new PredictionOutput
