@@ -216,7 +216,7 @@ namespace LeagueSharp.Common
         private static readonly string[] ExcludedChampions = new string[] { "Xerath", };
         private static int _option = 0;
 
-        public static Prediction()
+        static Prediction()
         {
             if (ExcludedChampions.Contains(ObjectManager.Player.ChampionName))
             {
