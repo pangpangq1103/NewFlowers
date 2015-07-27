@@ -72,7 +72,7 @@ namespace LeagueSharp.Common
         public static TargetingMode Mode = TargetingMode.AutoPriority;
         private static Menu _configMenu;
         private static Obj_AI_Hero _selectedTargetObjAiHero;
-
+        private static Obj_AI_Hero Player = ObjectManager.Player;
         #endregion
 
         #region EventArgs
@@ -82,6 +82,11 @@ namespace LeagueSharp.Common
         }
         private static void DrawingOnOnDraw(EventArgs args)
         {
+            if(Player.IsDead)
+            { 
+                return;
+            }
+
             if (_selectedTargetObjAiHero.IsValidTarget() && _configMenu != null &&
                 _configMenu.Item("FocusSelected").GetValue<bool>() &&
                 _configMenu.Item("SelTColor").GetValue<bool>())

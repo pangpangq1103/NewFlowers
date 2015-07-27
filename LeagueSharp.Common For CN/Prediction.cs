@@ -219,14 +219,16 @@ namespace LeagueSharp.Common
         public static void AddToMenu(Menu config)
         {
             _configMenu = config;
-            Notifications.AddNotification("需要充能的技能(有释放延迟)无法使用新预判~~", 4000);
-            Notifications.AddNotification("例如泽拉斯无法使用新预判 等待升级~", 4000);
+            Notifications.AddNotification("需要充能的技能无法使用新预判~~", 4000);
+            Notifications.AddNotification("泽拉斯无法使用新预判", 4000);
 
             config.AddItem(new MenuItem("method", "预判方式", true).SetShared().SetValue(new StringList(new[] 
             { "新预判(极端)", "新预判(正常)", "原版库预判" }))).
             ValueChanged += Prediction_ValueChanged;
 
             config.AddItem(new MenuItem("Sep1", "花边尝鲜新预判模式").SetShared());
+            config.AddItem(new MenuItem("Sep12", "需要充能的技能无法使用新预判").SetShared());
+            config.AddItem(new MenuItem("Sep123", "例如泽拉斯 韦鲁斯无法使用新").SetShared());
         }
 
         static void Prediction_ValueChanged(object sender, OnValueChangeEventArgs e)
@@ -234,6 +236,7 @@ namespace LeagueSharp.Common
                 var n = e.GetNewValue<StringList>();
                 _option = n.SelectedIndex;
                 Notifications.AddNotification(string.Format("预判模式更改为 {0} [{1}]", n.SelectedValue, _option), 4000);
+                Notifications.AddNotification("           By 花边~", 4000);
         }
        /* static Prediction()
         {

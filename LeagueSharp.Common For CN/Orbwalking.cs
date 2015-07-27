@@ -853,6 +853,11 @@ namespace LeagueSharp.Common
 
             private void DrawingOnOnDraw(EventArgs args)
             {
+                if (Player.IsDead)
+                { 
+                    return;
+                }
+
                 var ²¹µ¶Ð¡±ø = _config.Item("bdxb").GetValue<Circle>();
 
                 if (_config.Item("AACircle").GetValue<bool>())
