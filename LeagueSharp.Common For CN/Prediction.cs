@@ -221,14 +221,14 @@ namespace LeagueSharp.Common
             _configMenu = config;
             Notifications.AddNotification("需要充能的技能(有释放延迟)无法使用新预判~~", 4000);
             Notifications.AddNotification("例如泽拉斯无法使用新预判 等待升级~", 4000);
-            var predictionsettings = new Menu("预判设置", "predictionsettings", true);
+           /* var predictionsettings = new Menu("预判设置", "predictionsettings", true);
 
             predictionsettings.AddItem(new MenuItem("method", "预判方式", true).SetShared().SetValue(new StringList(new[] 
             { "新预判(极端)", "新预判(正常)", "原版库预判" }))).
             ValueChanged += Prediction_ValueChanged;
 
-            config.AddSubMenu(predictionsettings);
-            config.AddItem(new MenuItem("Sep", "123").SetShared());
+            config.AddItem(predictionsettings);*/
+            config.AddItem(new MenuItem("Sep1", "123").SetShared());
         }
 
         static void Prediction_ValueChanged(object sender, OnValueChangeEventArgs e)
