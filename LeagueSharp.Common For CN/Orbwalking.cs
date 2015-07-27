@@ -854,7 +854,6 @@ namespace LeagueSharp.Common
             private void DrawingOnOnDraw(EventArgs args)
             {
                 var ²¹µ¶Ð¡±ø = _config.Item("bdxb").GetValue<Circle>();
-                var ¸½½ü¿É»÷É± = _config.Item("fjkjs").GetValue<Circle>();
 
                 if (_config.Item("AACircle").GetValue<bool>())
                 {
@@ -907,7 +906,7 @@ namespace LeagueSharp.Common
 
                     foreach (var xMinion in xMinions)
                     {
-                        if (²¹µ¶Ð¡±ø.Active && Player.GetAutoAttackDamage(xMinion) >= xMinion.Health)
+                        if (Player.GetAutoAttackDamage(xMinion) >= xMinion.Health)
                             Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, ²¹µ¶Ð¡±ø.Color, 5);
                     }
                 }
