@@ -30,10 +30,6 @@ namespace 花边库引用走砍
 
             Orbwalker = new Orbwalking.Orbwalker(Menu.AddSubMenu(new Menu("Orbwalker", "Orbwalker")));
 
-            var PredictionMenu = new Menu("Perdiction", "perdiction");
-            Prediction.AddToMenu(PredictionMenu);
-            Menu.AddSubMenu(PredictionMenu);
-
             Menu.AddItem(new MenuItem("作者", "作者:花边下丶情未央"));
             Menu.AddItem(new MenuItem("版本", "版本 : 6.6.6.6"));
             Menu.AddItem(new MenuItem("Best 最强系列 为你分享", "Best 最强系列 为你分享"));
