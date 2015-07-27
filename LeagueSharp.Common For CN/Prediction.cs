@@ -211,11 +211,32 @@ namespace LeagueSharp.Common
     /// <summary>
     ///     Class used for calculating the position of the given unit after a delay.
     /// </summary>
+
     public static class Prediction
     {
-        public static readonly string[] ExcludedChampions = new string[] { "Xerath", };
+        public static readonly string[] ExcludedChampions = new string[] { "Xerath","Varus" };
         public static int _option = 0;
+        public static void AddToMenu(Menu config)
+        {
+            if (ExcludedChampions.Contains(ObjectManager.Player.ChampionName))
+            {
+                _option = 2;
+                Console.WriteLine(@"需要充能的技能(有释放延迟)无法使用新预判~~");
+                Notifications.AddNotification("例如泽拉斯无法使用新预判 等待升级~", 4000);
 
+                return;
+            }
+
+            var menu = new Menu("预判设置", "predictionsettings", true);
+            menu.AddItem(new MenuItem("method", "预判方式", true).SetShared().SetValue(new StringList(new[] { "新预判(极端)", "新预判(正常)", "原版库预判" }))).ValueChanged +=
+                (sender, args) =>
+                {
+                    var n = args.GetNewValue<StringList>();
+                    _option = n.SelectedIndex;
+                    Notifications.AddNotification(string.Format("预判模式更改为 {0} [{1}]", n.SelectedValue, _option), 4000);
+                };
+            menu.AddToMainMenu();
+        }
        /* static Prediction()
         {
             if (ExcludedChampions.Contains(ObjectManager.Player.ChampionName))

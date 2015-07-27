@@ -37,8 +37,9 @@ namespace LeagueSharp.Common
         private readonly Orbwalking.Orbwalker _orbwalker;
         private readonly Menu _orbwalkerMenu;
         private readonly Menu _targetSelectorMenu;
+        private readonly Menu _predictionMenu;
 
-        public MenuWrapper(string menuName, bool addTargetSelector = true, bool addOrbwalker = true)
+        public MenuWrapper(string menuName, bool addTargetSelector = true, bool addOrbwalker = true , bool addprediction = true)
         {
             // Create menu
             _menu = new Menu(menuName, Regex.Replace(menuName.ToLower(), @"\s+", ""), true);
@@ -57,6 +58,14 @@ namespace LeagueSharp.Common
                 _orbwalkerMenu = new Menu("Orbwalker", "orbwalker");
                 _orbwalker = new Orbwalking.Orbwalker(_orbwalkerMenu);
                 _menu.AddSubMenu(_orbwalkerMenu);
+            }
+
+            if (addprediction)
+            {
+                // new prediction
+                _predictionMenu = new Menu("Prediction", "perdiction");
+                Prediction.AddToMenu(_predictionMenu);
+                _menu.AddSubMenu(_predictionMenu);
             }
 
             // Create main menu wrapper
@@ -79,6 +88,11 @@ namespace LeagueSharp.Common
         public Menu TargetSelectorMenu
         {
             get { return _targetSelectorMenu; }
+        }
+
+        public  Menu PredictionMenu
+        {
+            get { return _predictionMenu; }
         }
 
         public Menu OrbwalkerMenu

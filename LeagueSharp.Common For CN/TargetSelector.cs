@@ -243,23 +243,6 @@ namespace LeagueSharp.Common
                     .SetValue(new StringList(Enum.GetNames(typeof(TargetingMode)))));
             config.AddItem(new MenuItem("Flowers", "Best-必备优化库"));
             config.AddItem(new MenuItem("Flowers1", "对外QQ群:299606556"));
-            if (Prediction.ExcludedChampions.Contains(ObjectManager.Player.ChampionName))
-            {
-                Prediction._option = 2;
-                Console.WriteLine(@"需要充能的技能(有释放延迟)无法使用新预判~~");
-                Notifications.AddNotification("例如泽拉斯无法使用新预判 等待升级~", 4000);
-
-                return;
-            }
-
-            var menu = new Menu("预判设置", "predictionsettings", true);
-            menu.AddItem(new MenuItem("method", "预判方式", true).SetShared().SetValue(new StringList(new[] { "新预判(极端)", "新预判(正常)", "原版库预判" }))).ValueChanged +=
-                (sender, args) =>
-                {
-                    var n = args.GetNewValue<StringList>();
-                    Prediction._option = n.SelectedIndex;
-                    Notifications.AddNotification(string.Format("预判模式更改为 {0} [{1}]", n.SelectedValue, Prediction._option), 4000);
-                };
         }
 
         private static void autoPriorityItem_ValueChanged(object sender, OnValueChangeEventArgs e)
