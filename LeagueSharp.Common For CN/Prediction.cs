@@ -214,21 +214,28 @@ namespace LeagueSharp.Common
 
     public static class Prediction
     {
+        private static Menu _configMenu;
         public static int _option = 0;
         public static void AddToMenu(Menu config)
         {
+            _configMenu = config;
             Notifications.AddNotification("需要充能的技能(有释放延迟)无法使用新预判~~", 4000);
             Notifications.AddNotification("例如泽拉斯无法使用新预判 等待升级~", 4000);
-            var menu = new Menu("预判设置", "predictionsettings", true);
+            var predictionsettings = new Menu("预判设置", "predictionsettings", true);
 
-            menu.AddItem(new MenuItem("method", "预判方式", true).SetShared().SetValue(new StringList(new[] { "新预判(极端)", "新预判(正常)", "原版库预判" }))).ValueChanged +=
-                (sender, args) =>
-                {
-                    var n = args.GetNewValue<StringList>();
-                    _option = n.SelectedIndex;
-                    Notifications.AddNotification(string.Format("预判模式更改为 {0} [{1}]", n.SelectedValue, _option), 4000);
-                };
-            menu.AddToMainMenu();
+            predictionsettings.AddItem(new MenuItem("method", "预判方式", true).SetShared().SetValue(new StringList(new[] 
+            { "新预判(极端)", "新预判(正常)", "原版库预判" }))).
+            ValueChanged += Prediction_ValueChanged;
+
+            config.AddSubMenu(predictionsettings);
+            config.AddItem(new MenuItem("Sep", "123").SetShared());
+        }
+
+        static void Prediction_ValueChanged(object sender, OnValueChangeEventArgs e)
+        {
+                var n = e.GetNewValue<StringList>();
+                _option = n.SelectedIndex;
+                Notifications.AddNotification(string.Format("预判模式更改为 {0} [{1}]", n.SelectedValue, _option), 4000);
         }
        /* static Prediction()
         {
