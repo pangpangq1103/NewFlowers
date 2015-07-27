@@ -28,6 +28,9 @@ namespace 花边库引用走砍
 
             Menu = new Menu("Flowers Commom Orbwalker", "花边-引用库走砍", true);
 
+			var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
+            TargetSelector.AddToMenu(targetSelectorMenu);
+            Menu.AddSubMenu(targetSelectorMenu);
             Orbwalker = new Orbwalking.Orbwalker(Menu.AddSubMenu(new Menu("Orbwalker", "Orbwalker")));
 
             Menu.AddItem(new MenuItem("作者", "作者:花边下丶情未央"));
