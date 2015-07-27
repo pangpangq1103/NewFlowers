@@ -213,10 +213,10 @@ namespace LeagueSharp.Common
     /// </summary>
     public static class Prediction
     {
-        private static readonly string[] ExcludedChampions = new string[] { "Xerath", };
-        private static int _option = 0;
+        public static readonly string[] ExcludedChampions = new string[] { "Xerath", };
+        public static int _option = 0;
 
-        static Prediction()
+       /* static Prediction()
         {
             if (ExcludedChampions.Contains(ObjectManager.Player.ChampionName))
             {
@@ -236,7 +236,7 @@ namespace LeagueSharp.Common
                     Notifications.AddNotification(string.Format("预判模式更改为 {0} [{1}]", n.SelectedValue, _option), 4000);
                 };
             menu.AddToMainMenu();
-        }
+        }*/
 
         public static PredictionOutput GetPrediction(Obj_AI_Base unit, float delay)
         {

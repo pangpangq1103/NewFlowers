@@ -513,8 +513,7 @@ namespace LeagueSharp.Common
                     new MenuItem("HoldZone", "控制 区域").SetShared()
                         .SetValue(new Circle(false, Color.FromArgb(255, 255, 0, 255))));
                 drawings.AddItem(new MenuItem("wushangdaye", "无伤打野点(远程专用)").SetValue(false));
-                drawings.AddItem(new MenuItem("bdxb", "显示可以补刀的小兵血量").SetValue(new Circle(false, Color.GreenYellow)));
-                drawings.AddItem(new MenuItem("fjkjs", "显示可击杀的小兵(脚下线圈)").SetValue(new Circle(false, Color.Gray)));
+                drawings.AddItem(new MenuItem("bdxb", "显示可以补刀的小兵(线圈)").SetValue(new Circle(false, Color.GreenYellow)));
                 _config.AddSubMenu(drawings);
 
                 /* Misc options */
@@ -902,7 +901,7 @@ namespace LeagueSharp.Common
                     Render.Circle.DrawCircle(new Vector3(7001.741f, 9915.717f, 54.02466f), circleRange, System.Drawing.Color.Orange, 3); // red team :wariaths                    
                 }
 
-                if (补刀小兵.Active || 附近可击杀.Active)
+                if (补刀小兵.Active)
                 {
                     var xMinions = MinionManager.GetMinions(Player.Position, Player.AttackRange + Player.BoundingRadius + 300, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.MaxHealth);
 
@@ -910,8 +909,6 @@ namespace LeagueSharp.Common
                     {
                         if (补刀小兵.Active && Player.GetAutoAttackDamage(xMinion) >= xMinion.Health)
                             Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 补刀小兵.Color, 5);
-                        else if (附近可击杀.Active && Player.GetAutoAttackDamage(xMinion) * 2 >= xMinion.Health)
-                            Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 附近可击杀.Color, 5);
                     }
                 }
 
