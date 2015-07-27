@@ -58,15 +58,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Flowers.cs" />
-    <Compile Include="Huabian\Lost\DamageIndicator.cs" />
-    <Compile Include="Huabian\Lost\Flee.cs" />
-    <Compile Include="Huabian\KalistaM.cs" />
-    <Compile Include="Huabian\Lost\killables.cs" />
-    <Compile Include="Huabian\Lost\lost.cs" />
-    <Compile Include="Huabian\AssemblyInfo.cs" />
+    <Compile Include="lost.cs" />
+    <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Huabian\App.config" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

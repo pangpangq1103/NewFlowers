@@ -505,13 +505,16 @@ namespace LeagueSharp.Common
                 var drawings = new Menu("显示设置", "drawings");
                 drawings.AddItem(
                     new MenuItem("AACircle", "自己 AA 范围").SetShared()
-                        .SetValue(new Circle(true, Color.FromArgb(255, 255, 0, 255))));
+                        .SetValue(true));
                 drawings.AddItem(
                     new MenuItem("AACircle2", "敌人 AA 范围").SetShared()
                         .SetValue(new Circle(false, Color.FromArgb(255, 255, 0, 255))));
                 drawings.AddItem(
                     new MenuItem("HoldZone", "控制 区域").SetShared()
                         .SetValue(new Circle(false, Color.FromArgb(255, 255, 0, 255))));
+                drawings.AddItem(new MenuItem("wushangdaye", "无伤打野点(远程专用)").SetValue(false));
+                drawings.AddItem(new MenuItem("bdxb", "显示可以补刀的小兵血量").SetValue(new Circle(false, Color.GreenYellow)));
+                drawings.AddItem(new MenuItem("fjkjs", "显示可击杀的小兵(脚下线圈)").SetValue(new Circle(false, Color.Gray)));
                 _config.AddSubMenu(drawings);
 
                 /* Misc options */
@@ -520,7 +523,7 @@ namespace LeagueSharp.Common
                     new MenuItem("HoldPosRadius", "控制区域半径").SetShared().SetValue(new Slider(0, 0, 250)));
                 misc.AddItem(new MenuItem("PriorizeFarm", "骚扰时优先打钱").SetShared().SetValue(true));
                 misc.AddItem(new MenuItem("FreezeHealth", "控线伤害 %").SetShared().SetValue(new Slider(50, 50)));
-                misc.AddItem(new MenuItem("PermaShow", "PermaShow").SetShared().SetValue(false)).ValueChanged += (s, args) => {
+                misc.AddItem(new MenuItem("PermaShow", "水印显示").SetShared().SetValue(false)).ValueChanged += (s, args) => {
                     if (args.GetNewValue<bool>())
                     {
                         _config.Item("Freeze").Permashow(false, "Freeze");
@@ -844,14 +847,24 @@ namespace LeagueSharp.Common
                     Console.WriteLine(e);
                 }
             }
+            private static float Hp百分比(Obj_AI_Hero Player)
+            {
+                return Player.Health * 100 / Player.MaxHealth;
+            }
 
             private void DrawingOnOnDraw(EventArgs args)
             {
-                if (_config.Item("AACircle").GetValue<Circle>().Active)
+                var 补刀小兵 = _config.Item("bdxb").GetValue<Circle>();
+                var 附近可击杀 = _config.Item("fjkjs").GetValue<Circle>();
+
+                if (_config.Item("AACircle").GetValue<bool>())
                 {
-                    Render.Circle.DrawCircle(
-                        Player.Position, GetRealAutoAttackRange(null) + 65,
-                        _config.Item("AACircle").GetValue<Circle>().Color);
+                    if (Hp百分比(Player) > 60)
+                        Render.Circle.DrawCircle(Player.Position, GetRealAutoAttackRange(null) + 65, System.Drawing.Color.GreenYellow, 2);
+                    else if (Hp百分比(Player) > 30)
+                        Render.Circle.DrawCircle(Player.Position, GetRealAutoAttackRange(null) + 65, System.Drawing.Color.Orange, 3);
+                    else
+                        Render.Circle.DrawCircle(Player.Position, GetRealAutoAttackRange(null) + 65, System.Drawing.Color.Red, 4);
                 }
 
                 if (_config.Item("AACircle2").GetValue<Circle>().Active)
@@ -870,6 +883,36 @@ namespace LeagueSharp.Common
                     Render.Circle.DrawCircle(
                         Player.Position, _config.Item("HoldPosRadius").GetValue<Slider>().Value,
                         _config.Item("HoldZone").GetValue<Circle>().Color);
+                }
+
+                if (Game.MapId == (GameMapId)11 && _config.Item("wushangdaye").GetValue<bool>())
+                {
+                    const float circleRange = 100f;
+
+                    Render.Circle.DrawCircle(new Vector3(7461.018f, 3253.575f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :red
+                    Render.Circle.DrawCircle(new Vector3(3511.601f, 8745.617f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :blue
+                    Render.Circle.DrawCircle(new Vector3(7462.053f, 2489.813f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :golems
+                    Render.Circle.DrawCircle(new Vector3(3144.897f, 7106.449f, 51.89026f), circleRange, System.Drawing.Color.Orange, 3); // blue team :wolfs
+                    Render.Circle.DrawCircle(new Vector3(7770.341f, 5061.238f, 49.26587f), circleRange, System.Drawing.Color.Orange, 3); // blue team :wariaths
+                    Render.Circle.DrawCircle(new Vector3(10930.93f, 5405.83f, -68.72192f), circleRange, System.Drawing.Color.Red, 3); // Dragon
+                    Render.Circle.DrawCircle(new Vector3(7326.056f, 11643.01f, 50.21985f), circleRange, System.Drawing.Color.Orange, 3); // red team :red
+                    Render.Circle.DrawCircle(new Vector3(11417.6f, 6216.028f, 51.00244f), circleRange, System.Drawing.Color.Orange, 3); // red team :blue
+                    Render.Circle.DrawCircle(new Vector3(7368.408f, 12488.37f, 56.47668f), circleRange, System.Drawing.Color.Orange, 3); // red team :golems
+                    Render.Circle.DrawCircle(new Vector3(10342.77f, 8896.083f, 51.72742f), circleRange, System.Drawing.Color.Orange, 3); // red team :wolfs
+                    Render.Circle.DrawCircle(new Vector3(7001.741f, 9915.717f, 54.02466f), circleRange, System.Drawing.Color.Orange, 3); // red team :wariaths                    
+                }
+
+                if (补刀小兵.Active || 附近可击杀.Active)
+                {
+                    var xMinions = MinionManager.GetMinions(Player.Position, Player.AttackRange + Player.BoundingRadius + 300, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.MaxHealth);
+
+                    foreach (var xMinion in xMinions)
+                    {
+                        if (补刀小兵.Active && Player.GetAutoAttackDamage(xMinion) >= xMinion.Health)
+                            Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 补刀小兵.Color, 5);
+                        else if (附近可击杀.Active && Player.GetAutoAttackDamage(xMinion) * 2 >= xMinion.Health)
+                            Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 附近可击杀.Color, 5);
+                    }
                 }
 
             }

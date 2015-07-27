@@ -76,16 +76,23 @@ namespace LeagueSharp.Common
         #endregion
 
         #region EventArgs
-
+        private static float Hp百分比(Obj_AI_Hero Player)
+        {
+            return Player.Health * 100 / Player.MaxHealth;
+        }
         private static void DrawingOnOnDraw(EventArgs args)
         {
             if (_selectedTargetObjAiHero.IsValidTarget() && _configMenu != null &&
                 _configMenu.Item("FocusSelected").GetValue<bool>() &&
-                _configMenu.Item("SelTColor").GetValue<Circle>().Active)
+                _configMenu.Item("SelTColor").GetValue<bool>())
             {
-                Render.Circle.DrawCircle(
-                    _selectedTargetObjAiHero.Position, 150, _configMenu.Item("SelTColor").GetValue<Circle>().Color, 7,
-                    true);
+
+                    if (_selectedTargetObjAiHero.Health > _selectedTargetObjAiHero.MaxHealth * 0.6)
+                        Render.Circle.DrawCircle(_selectedTargetObjAiHero.Position, 150, System.Drawing.Color.GreenYellow, 7, true);
+                    else if (_selectedTargetObjAiHero.Health > _selectedTargetObjAiHero.MaxHealth * 0.3)
+                        Render.Circle.DrawCircle(_selectedTargetObjAiHero.Position, 150, System.Drawing.Color.Orange, 7, true);
+                    else
+                        Render.Circle.DrawCircle(_selectedTargetObjAiHero.Position, 150, System.Drawing.Color.Red, 7,true);
             }
         }
 
@@ -210,7 +217,7 @@ namespace LeagueSharp.Common
             config.AddItem(
                 new MenuItem("ForceFocusSelected", "仅攻击被选择的目标").SetShared().SetValue(false));
             config.AddItem(
-                new MenuItem("SelTColor", "被选择目标地下线圈颜色").SetShared().SetValue(new Circle(true, Color.Red)));
+                new MenuItem("SelTColor", "被选择目标地下线圈颜色").SetShared().SetValue(true));
             config.AddItem(new MenuItem("Sep", "").SetShared());
             var autoPriorityItem = new MenuItem("AutoPriority", "自动排列顺序").SetShared().SetValue(false);
             autoPriorityItem.ValueChanged += autoPriorityItem_ValueChanged;

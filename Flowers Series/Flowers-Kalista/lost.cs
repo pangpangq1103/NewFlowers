@@ -21,6 +21,75 @@ using Item = LeagueSharp.Common.Items.Item;
 
 namespace Flowers滑板鞋_重生_
 {
+
+    class KalistaM
+    {
+        public static Menu 菜单;
+        public static void KalistaMenu()
+        {
+            菜单 = new Menu("Flowers-Kalista", "Lost.", true);
+
+            var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
+            TargetSelector.AddToMenu(targetSelectorMenu);
+            菜单.AddSubMenu(targetSelectorMenu);
+
+            var orbwalkerMenu = new Menu("Orbwalker", "Orbwalker");
+            lost.Orbwalker = new Orbwalking.Orbwalker(orbwalkerMenu);
+            菜单.AddSubMenu(orbwalkerMenu);
+
+            菜单.AddSubMenu(new Menu("Combo", "Combo"));
+            菜单.SubMenu("Combo").AddItem(new MenuItem("lzp", "Use Q", true).SetValue(true));
+            菜单.SubMenu("Combo").AddItem(new MenuItem("lze", "Use E", true).SetValue(true));
+            菜单.SubMenu("Combo").AddItem(new MenuItem("lzeee", "Use E KS", true).SetValue(true));
+            菜单.SubMenu("Combo").AddItem(new MenuItem("lzeeeeee", "Max E Stack", true).SetValue(new Slider(5, 1, 20)));
+            菜单.SubMenu("Combo").AddItem(new MenuItem("lzmp", "Combo Mana <=%", true).SetValue(new Slider(50, 0, 100)));
+
+            菜单.AddSubMenu(new Menu("Harass", "Harass"));
+            菜单.SubMenu("Harass").AddItem(new MenuItem("srq", "Use Q", true).SetValue(true));
+            菜单.SubMenu("Harass").AddItem(new MenuItem("AutoQ", "Auto Q Harass", true).SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Toggle)));
+            菜单.SubMenu("Harass").AddItem(new MenuItem("srmp", "Harass Mana <=%", true).SetValue(new Slider(50, 0, 100)));
+
+            菜单.AddSubMenu(new Menu("Clear", "Clear"));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qxq", "Use Q LaneClear", true).SetValue(false));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qxqqq", "Use Q Millions", true).SetValue(new Slider(3, 1, 5)));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qxe", "Use E LaneClear", true).SetValue(true));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qxeee", "Use E Millions", true).SetValue(new Slider(2, 1, 5)));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qyq", "Use Q JungleClear", true).SetValue(false));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qye", "Use E JungleClear", true).SetValue(true));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("eqiangyeguai", "Use E Steal Jungle", true).SetValue(true));
+            菜单.SubMenu("Clear").AddItem(new MenuItem("qxmp", "Clear Mana <=%", true).SetValue(new Slider(60, 0, 100)));
+
+            菜单.AddSubMenu(new Menu("Item", "Item"));
+            菜单.SubMenu("Item").AddItem(new MenuItem("UseYUU", "Use Youmuu's Ghostblade", true).SetValue(true));
+            菜单.SubMenu("Item").AddItem(new MenuItem("UseBRK", "Use Blade of the Ruined King", true).SetValue(true));
+            菜单.SubMenu("Item").AddItem(new MenuItem("UseBC", "Use Bilgewater Cutlass", true).SetValue(true));
+
+            菜单.AddSubMenu(new Menu("Flee", "Flee"));
+            菜单.SubMenu("Flee").AddItem(new MenuItem("Flee", "Flee", true).SetValue(new KeyBind("Z".ToCharArray()[0], KeyBindType.Press)));
+
+
+            菜单.AddSubMenu(new Menu("Misc", "Misc"));
+            菜单.SubMenu("Misc").AddItem(new MenuItem("DamageExxx", "Auto E -> When millions will die and hero has buff", true).SetValue(true));
+            菜单.SubMenu("Misc").AddItem(new MenuItem("AutoW", "Auto W", true).SetValue(false));
+            菜单.SubMenu("Misc").AddItem(new MenuItem("autowenemyclose", "Dont Send W with an enemy in X Range:", true).SetValue(new Slider(2000, 0, 5000)));
+            菜单.SubMenu("Misc").AddItem(new MenuItem("harassEoutOfRange", "Use E when out of range", true).SetValue(true));
+            菜单.SubMenu("Misc").AddItem(new MenuItem("KillSteal", "KillSteal", true).SetValue(true));
+
+
+
+            菜单.AddSubMenu(new Menu("Drawings", "Drawing"));
+            菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingQ", "Q Range").SetValue(new Circle(true, Color.FromArgb(138, 101, 255))));
+            菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingW", "W Range").SetValue(new Circle(false, Color.FromArgb(202, 170, 255))));
+            菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingE", "E Range").SetValue(new Circle(true, Color.FromArgb(255, 0, 0))));
+            菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingR", "R Range").SetValue(new Circle(false, Color.FromArgb(0, 255, 0))));
+            菜单.SubMenu("Drawing").AddItem(new MenuItem("DrawEDamage", "Drawing E Damage(From Kalima)").SetValue(new Circle(true, Color.FromArgb(202, 170, 255))));
+            菜单.SubMenu("Drawing").AddItem(new MenuItem("drawingAA", "Real AA Range(OKTW© Style)").SetValue(true));
+            菜单.SubMenu("Drawing").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
+
+            菜单.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
+            菜单.AddToMainMenu();
+        }
+    }
     internal class lost
     {
         static Spell Q;
@@ -80,11 +149,9 @@ namespace Flowers滑板鞋_重生_
             R.SetSkillshot(0.50f, 1500, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             KalistaM.KalistaMenu();
-            DamageIndicator.Initialize(lost.显示E伤害);
 
             Game.OnUpdate += 总菜单;
             Drawing.OnDraw += 范围显示;
-            DamageIndicator.DamageToUnit = 显示E伤害;
             Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
         }
 
@@ -104,32 +171,62 @@ namespace Flowers滑板鞋_重生_
                 }
             }
         }
-
-        private static float 显示E伤害(Obj_AI_Hero hero)
+        private static List<Drawline> drawlinelist = new List<Drawline>();
+        private class Drawline
         {
-            float damage = 0;
-
-            if (E.IsReady() && KalistaM.菜单.Item("DrawEDamage", true).GetValue<Boolean>())
-                damage += E.GetDamage(hero); 
-
-            return damage;
+            public string Name { get; set; }
+            public double Timer { get; set; }
+            public float Addedon { get; set; }
+            //here goes the function stuff...
+            public float X { get; set; }
+            public float Y { get; set; }
+            public float X2 { get; set; }
+            public float Y2 { get; set; }
+            public float Thickness { get; set; }
+            public Color Color { get; set; }
         }
-
+        public static void drawline(string name, float x, float y, float x2, float y2, float thickness, Color color)
+        {
+            drawlinelist.RemoveAll(xXx => xXx.Name == name);
+            drawlinelist.Add(new Drawline() { Name = name, X = x, Y = y, X2 = x2, Y2 = y2, Thickness = thickness, Color = color });
+            return;
+        }
+        static float? ondrawtimers;
         private static void 范围显示(EventArgs args)
         {
            if (Player.IsDead)
            {
                return;
            }
-
+           var timerightnow = Game.ClockTime;
+           drawlinelist.RemoveAll(x => timerightnow - x.Addedon > x.Timer);
            var AA范围OKTWStyle = KalistaM.菜单.Item("drawingAA").GetValue<bool>();
            var AA目标OKTWStyle = KalistaM.菜单.Item("orb").GetValue<bool>();
            var Q范围 = KalistaM.菜单.Item("drawingQ").GetValue<Circle>();
            var W范围 = KalistaM.菜单.Item("drawingW").GetValue<Circle>();
            var E范围 = KalistaM.菜单.Item("drawingE").GetValue<Circle>();
            var R范围 = KalistaM.菜单.Item("drawingR").GetValue<Circle>();
-           var 补刀小兵 = KalistaM.菜单.Item("bdxb").GetValue<Circle>();
-           var 附近可击杀 = KalistaM.菜单.Item("fjkjs").GetValue<Circle>();
+
+           var dEDmG = KalistaM.菜单.Item("DrawEDamage").GetValue<Circle>();
+           if (dEDmG.Active && E.Level > 0)
+           {
+               var enemieswithspears = HeroManager.Enemies.Where(x => x.HasBuff("kalistaexpungemarker") && x.IsHPBarRendered);
+               if (enemieswithspears != null)
+               {
+                   var barsize = 104f;
+                   foreach (var enemy in enemieswithspears)
+                   {
+                       var health = enemy.Health;
+                       var maxhealth = enemy.MaxHealth;
+                       var pos = enemy.HPBarPosition;
+                       var percent = E.GetDamage(enemy) / maxhealth * barsize;
+                       var start = pos + (new Vector2(10f, 19f));
+                       var end = pos + (new Vector2(10f + percent, 19f));
+
+                       drawline("drawEdmg" + enemy.ChampionName, start[0], start[1], end[0], end[1], 4.0f, dEDmG.Color);
+                   }
+               }
+           }
 
            if (AA范围OKTWStyle)
            {
@@ -166,41 +263,7 @@ namespace Flowers滑板鞋_重生_
            if (R.IsReady() && R范围.Active)
                Render.Circle.DrawCircle(Player.Position, R.Range + 50, R范围.Color);
 
-           if (补刀小兵.Active || 附近可击杀.Active)
-           {
-               var xMinions = MinionManager.GetMinions(Player.Position, Player.AttackRange + Player.BoundingRadius + 300, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.MaxHealth);
 
-               foreach (var xMinion in xMinions)
-               {
-                   if (补刀小兵.Active && Player.GetAutoAttackDamage(xMinion) >= xMinion.Health)
-                       Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 补刀小兵.Color, 5);
-                   else if (附近可击杀.Active && Player.GetAutoAttackDamage(xMinion) * 2 >= xMinion.Health)
-                       Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 附近可击杀.Color, 5);
-               }
-           }
-
-           if (Game.MapId == (GameMapId)11 && KalistaM.菜单.Item("wushangdaye").GetValue<bool>())
-           {
-               const float circleRange = 100f;
-
-               Render.Circle.DrawCircle(new Vector3(7461.018f, 3253.575f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :red
-               Render.Circle.DrawCircle(new Vector3(3511.601f, 8745.617f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :blue
-               Render.Circle.DrawCircle(new Vector3(7462.053f, 2489.813f, 52.57141f), circleRange, System.Drawing.Color.Orange, 3); // blue team :golems
-               Render.Circle.DrawCircle(new Vector3(3144.897f, 7106.449f, 51.89026f), circleRange, System.Drawing.Color.Orange, 3); // blue team :wolfs
-               Render.Circle.DrawCircle(new Vector3(7770.341f, 5061.238f, 49.26587f), circleRange, System.Drawing.Color.Orange, 3); // blue team :wariaths
-               Render.Circle.DrawCircle(new Vector3(10930.93f, 5405.83f, -68.72192f), circleRange, System.Drawing.Color.Red, 3); // Dragon
-               Render.Circle.DrawCircle(new Vector3(7326.056f, 11643.01f, 50.21985f), circleRange, System.Drawing.Color.Orange, 3); // red team :red
-               Render.Circle.DrawCircle(new Vector3(11417.6f, 6216.028f, 51.00244f), circleRange, System.Drawing.Color.Orange, 3); // red team :blue
-               Render.Circle.DrawCircle(new Vector3(7368.408f, 12488.37f, 56.47668f), circleRange, System.Drawing.Color.Orange, 3); // red team :golems
-               Render.Circle.DrawCircle(new Vector3(10342.77f, 8896.083f, 51.72742f), circleRange, System.Drawing.Color.Orange, 3); // red team :wolfs
-               Render.Circle.DrawCircle(new Vector3(7001.741f, 9915.717f, 54.02466f), circleRange, System.Drawing.Color.Orange, 3); // red team :wariaths                    
-           }
-
-            //balista biubiubiu fuckyou man 
-       /*    if (KalistaM.菜单.Item("minBRange", true).GetValue<Circle>().Active)
-               Render.Circle.DrawCircle(Player.Position, KalistaM.菜单.Item("minRange", true).GetValue<Slider>().Value, KalistaM.菜单.Item("minBRange", true).GetValue<Circle>().Color, 3);
-           if (KalistaM.菜单.Item("maxBRange", true).GetValue<Circle>().Active)
-               Render.Circle.DrawCircle(Player.Position, KalistaM.菜单.Item("maxRange", true).GetValue<Slider>().Value, KalistaM.菜单.Item("maxBRange", true).GetValue<Circle>().Color, 3);*/
         }
 
         public static bool UseBotrk(Obj_AI_Hero target)
@@ -747,6 +810,166 @@ namespace Flowers滑板鞋_重生_
                     Orbwalking.Orbwalk(target, movePosition, 90f, 0f, true, true);
                 }
             }
+        }
+    }
+
+    public class Flee
+    {
+        private static readonly Obj_AI_Hero Player = ObjectManager.Player;
+        public static bool IsLyingInCone(Vector2 position, Vector2 apexPoint, Vector2 circleCenter, double aperture)
+        {
+            double halfAperture = aperture / 2;
+
+            Vector2 apexToXVect = apexPoint - position;
+
+            Vector2 axisVect = apexPoint - circleCenter;
+
+            bool isInInfiniteCone = DotProd(apexToXVect, axisVect) / Magn(apexToXVect) / Magn(axisVect) > Math.Cos(halfAperture);
+
+            if (!isInInfiniteCone)
+                return false;
+
+            bool isUnderRoundCap = DotProd(apexToXVect, axisVect) / Magn(axisVect) < Magn(axisVect);
+
+            return isUnderRoundCap;
+        }
+
+        private static float DotProd(Vector2 a, Vector2 b)
+        {
+            return a.X * b.X + a.Y * b.Y;
+        }
+
+        private static float Magn(Vector2 a)
+        {
+            return (float)(Math.Sqrt(a.X * a.X + a.Y * a.Y));
+        }
+
+
+        public static Vector2? GetFirstWallPoint(Vector3 from, Vector3 to, float step = 25)
+        {
+            return GetFirstWallPoint(from.To2D(), to.To2D(), step);
+        }
+
+        public static Vector2? GetFirstWallPoint(Vector2 from, Vector2 to, float step = 25)
+        {
+            var direction = (to - from).Normalized();
+
+            for (float d = 0; d < from.Distance(to); d = d + step)
+            {
+                var testPoint = from + d * direction;
+                var flags = NavMesh.GetCollisionFlags(testPoint.X, testPoint.Y);
+                if (flags.HasFlag(CollisionFlags.Wall) || flags.HasFlag(CollisionFlags.Building))
+                {
+                    return from + (d - step) * direction;
+                }
+            }
+
+            return null;
+        }
+
+        public static List<Obj_AI_Base> GetDashObjects(IEnumerable<Obj_AI_Base> predefinedObjectList = null)
+        {
+            List<Obj_AI_Base> objects;
+            if (predefinedObjectList != null)
+                objects = predefinedObjectList.ToList();
+            else
+                objects = ObjectManager.Get<Obj_AI_Base>().Where(o => o.IsValidTarget(Orbwalking.GetRealAutoAttackRange(o))).ToList();
+
+            var apexPoint = Player.ServerPosition.To2D() + (Player.ServerPosition.To2D() - Game.CursorPos.To2D()).Normalized() * Orbwalking.GetRealAutoAttackRange(Player);
+
+            return objects.Where(o => Flee.IsLyingInCone(o.ServerPosition.To2D(), apexPoint, Player.ServerPosition.To2D(), Math.PI)).OrderBy(o => o.Distance(apexPoint, true)).ToList();
+        }
+    }
+
+    static class Killable
+    {
+        public static readonly Obj_AI_Hero Player = ObjectManager.Player;
+        public static AttackableUnit AfterAttackTarget
+        {
+            get;
+            private set;
+        }
+        public static Orbwalking.Orbwalker Orbwalker
+        {
+            get { return Orbwalker; }
+        }
+        public static Spell E
+        {
+            get;
+            private set;
+        }
+
+        public static bool HasUBuff(this Obj_AI_Hero target)
+        {
+            if (target.ChampionName == "Tryndamere" &&
+                target.Buffs.Any(b => b.Caster.NetworkId == target.NetworkId && b.IsValidBuff() && b.DisplayName == "Undying Rage"))
+            {
+                return true;
+            }
+
+            if (target.Buffs.Any(b => b.IsValidBuff() && b.DisplayName == "Chrono Shift"))
+            {
+                return true;
+            }
+
+            if (target.Buffs.Any(b => b.IsValidBuff() && b.DisplayName == "JudicatorIntervention"))
+            {
+                return true;
+            }
+
+            if (target.ChampionName == "Poppy")
+            {
+                if (HeroManager.Allies.Any(o =>
+                    !o.IsMe &&
+                    o.Buffs.Any(b => b.Caster.NetworkId == target.NetworkId && b.IsValidBuff() && b.DisplayName == "PoppyDITarget")))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static float[] rawRendDamage = new float[] { 20, 30, 40, 50, 60 };
+        private static float[] rawRendDamageMultiplier = new float[] { 0.6f, 0.6f, 0.6f, 0.6f, 0.6f };
+        private static float[] rawRendDamagePerSpear = new float[] { 10, 14, 19, 25, 32 };
+        private static float[] rawRendDamagePerSpearMultiplier = new float[] { 0.2f, 0.225f, 0.25f, 0.275f, 0.3f };
+        public static BuffInstance GetRendBuff(this Obj_AI_Base target)
+        {
+            return target.Buffs.Find(b => b.Caster.IsMe && b.IsValidBuff() && b.DisplayName == "KalistaExpungeMarker");
+        }
+
+
+        public static bool IsRendKillable(this Obj_AI_Base target)
+        {
+            var hero = target as Obj_AI_Hero;
+            return GetRendDamage(target) > target.Health && (hero == null || !hero.HasUBuff());
+        }
+
+        public static float GetRendDamage(Obj_AI_Hero target)
+        {
+            return (float)GetRendDamage(target, -1);
+        }
+
+        public static float GetRendDamage(Obj_AI_Base target, int customStacks = -1)
+        {
+            // Calculate the damage and return
+            return ((float)Player.CalcDamage(target, Damage.DamageType.Physical, GetRawRendDamage(target, customStacks)) - 20) * 0.98f;
+        }
+
+        public static float GetRawRendDamage(Obj_AI_Base target, int customStacks = -1)
+        {
+            // Get buff
+            var buff = target.GetRendBuff();
+
+            if (buff != null || customStacks > -1)
+            {
+                return (rawRendDamage[E.Level - 1] + rawRendDamageMultiplier[E.Level - 1] * Player.TotalAttackDamage()) + // Base damage
+                       ((customStacks < 0 ? buff.Count : customStacks) - 1) * // Spear count
+                       (rawRendDamagePerSpear[E.Level - 1] + rawRendDamagePerSpearMultiplier[E.Level - 1] * Player.TotalAttackDamage()); // Damage per spear
+            }
+
+            return 0;
         }
     }
 }
