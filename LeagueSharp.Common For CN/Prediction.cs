@@ -222,9 +222,9 @@ namespace LeagueSharp.Common
             Notifications.AddNotification("需要充能的技能无法使用新预判~~", 4000);
             Notifications.AddNotification("泽拉斯无法使用新预判", 4000);
 
-            config.AddItem(new MenuItem("method", "预判方式", true).SetShared().SetValue(new StringList(new[] 
-            { "新预判(极端)", "新预判(正常)", "原版库预判" }))).
-            ValueChanged += Prediction_ValueChanged;
+            config.AddItem(new MenuItem("predictionpredictionmethod", "预判方式", true).SetShared().SetValue(new StringList(new[] 
+            { "原版库预判", "新预判(极端)", "新预判(正常)" }))).
+            ValueChanged += Prediction_ValueChanged;    
 
             config.AddItem(new MenuItem("Sep1", "花边尝鲜新预判模式").SetShared());
             config.AddItem(new MenuItem("Sep12", "需要充能的技能无法使用新预判").SetShared());
@@ -236,7 +236,7 @@ namespace LeagueSharp.Common
                 var n = e.GetNewValue<StringList>();
                 _option = n.SelectedIndex;
                 Notifications.AddNotification(string.Format("预判模式更改为 {0} [{1}]", n.SelectedValue, _option), 4000);
-                Notifications.AddNotification("           By 花边~", 4000);
+                Notifications.AddNotification("      提示 By 花边~", 4000);
         }
        /* static Prediction()
         {
@@ -250,7 +250,7 @@ namespace LeagueSharp.Common
             }
 
             var menu = new Menu("预判设置", "predictionsettings", true);
-            menu.AddItem(new MenuItem("method", "预判方式", true).SetShared().SetValue(new StringList(new[] { "新预判(极端)", "新预判(正常)", "原版库预判" }))).ValueChanged +=
+            menu.AddItem(new MenuItem("predictionmethod", "预判方式", true).SetShared().SetValue(new StringList(new[] { "新预判(极端)", "新预判(正常)", "原版库预判" }))).ValueChanged +=
                 (sender, args) =>
                 {
                     var n = args.GetNewValue<StringList>();
@@ -275,9 +275,9 @@ namespace LeagueSharp.Common
             return GetPrediction(new PredictionInput { Unit = unit, Delay = delay, Radius = radius, Speed = speed });
         }
 
-        public static PredictionOutput GetPrediction(Obj_AI_Base unit, float delay, float radius, float speed, int method)
+        public static PredictionOutput GetPrediction(Obj_AI_Base unit, float delay, float radius, float speed, int predictionmethod)
         {
-            return GetPrediction(new PredictionInput { Unit = unit, Delay = delay, Radius = radius, Speed = speed }, method);
+            return GetPrediction(new PredictionInput { Unit = unit, Delay = delay, Radius = radius, Speed = speed }, predictionmethod);
         }
 
         public static PredictionOutput GetPrediction(Obj_AI_Base unit,
@@ -298,16 +298,16 @@ namespace LeagueSharp.Common
                     });
         }
 
-        public static PredictionOutput GetPrediction(PredictionInput input, int method = 0)
+        public static PredictionOutput GetPrediction(PredictionInput input, int predictionmethod = 0)
         {
-            return GetPrediction(input, true, true, method);
+            return GetPrediction(input, true, true, predictionmethod);
         }
 
-        internal static PredictionOutput GetPrediction(PredictionInput input, bool ft, bool checkCollision, int method = 0)
+        internal static PredictionOutput GetPrediction(PredictionInput input, bool ft, bool checkCollision, int predictionmethod = 0)
         {
-            if (method == 0)
+            if (predictionmethod == 0)
             {
-                method = _option;
+                predictionmethod = _option;
             }
 
             PredictionOutput result = null;
@@ -353,15 +353,15 @@ namespace LeagueSharp.Common
             //Normal prediction
             if (result == null)
             {
-                switch (method)
+                switch (predictionmethod)
                 {
-                    // Alternative updated prediction 
-                    case 1:
-                        result = GetUpdatedPrediction2(input);
-                        break;
                     // Old prediction 
-                    case 2:
+                    case 0:
                         result = GetStandardPrediction(input);
+                        break;
+                    // Alternative updated prediction 
+                    case 2:
+                        result = GetUpdatedPrediction2(input);
                         break;
                     // Default updated prediction 
                     default:
@@ -386,9 +386,9 @@ namespace LeagueSharp.Common
                     result.Hitchance = HitChance.OutOfRange;
                 }
 
-                /* This does not need to be handled for the updated predictions, but left as a reference. 
+                /* This does not need to be handled for the updated predictions, but left as a reference.*/
 
-                if (input.RangeCheckFrom.Distance(result.CastPosition, true) > Math.Pow(input.Range, 2))
+                if (predictionmethod == 0 &&  input.RangeCheckFrom.Distance(result.CastPosition, true) > Math.Pow(input.Range, 2))
                 {
                     if (result.Hitchance != HitChance.OutOfRange)
                     {
@@ -400,7 +400,7 @@ namespace LeagueSharp.Common
                     {
                         result.Hitchance = HitChance.OutOfRange;
                     }
-                }*/
+                }
             }
 
             //Check for collision
@@ -525,7 +525,7 @@ namespace LeagueSharp.Common
 
             return new PredictionOutput()
             {
-                CastPosition = input.Unit.ServerPosition + targetVelocity * (t),
+                CastPosition = input.Unit.ServerPosition + targetVelocity * (t + input.Delay),
                 UnitPosition = input.Unit.ServerPosition,
                 Hitchance = HitChance.VeryHigh
             };
