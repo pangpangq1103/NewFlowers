@@ -131,11 +131,6 @@
     <Compile Include="Geometry.cs" />
     <Compile Include="Items.cs" />
     <Compile Include="MEC.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Render.cs" />
     <Compile Include="Shared.cs" />
     <Compile Include="Spell.cs" />
