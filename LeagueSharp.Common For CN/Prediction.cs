@@ -237,6 +237,9 @@ namespace LeagueSharp.Common
             menu.AddItem(new MenuItem("predictionmethod", "预判方式").SetShared().SetValue(new StringList(new[] 
             { "原版库预判", "新预判(极端)", "新预判(正常)" }))).
             ValueChanged +=Prediction_ValueChanged;
+            menu.AddItem(new MenuItem("Sep1", "花边-尝鲜新预判模式").SetShared());
+            menu.AddItem(new MenuItem("Sep12", "需要充能的技能无法使用新预判").SetShared());
+            menu.AddItem(new MenuItem("Sep123", "例如泽拉斯 韦鲁斯无法使用").SetShared());
             menu.AddToMainMenu();
         }
 
