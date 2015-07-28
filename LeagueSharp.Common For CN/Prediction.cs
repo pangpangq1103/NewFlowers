@@ -216,11 +216,10 @@ namespace LeagueSharp.Common
     {
         private static Menu _configMenu;
         public static int _option = 0;
-        public static void AddToMenu(Menu config)
+       /* public static void AddToMenu(Menu config)
         {
             _configMenu = config;
-            Notifications.AddNotification("需要充能的技能无法使用新预判~~", 4000);
-            Notifications.AddNotification("泽拉斯无法使用新预判", 4000);
+            Notifications.AddNotification("新预判加载成功!", 4000);
 
             config.AddItem(new MenuItem("predictionpredictionmethod", "预判方式", true).SetShared().SetValue(new StringList(new[] 
             { "原版库预判", "新预判(极端)", "新预判(正常)" }))).
@@ -228,7 +227,17 @@ namespace LeagueSharp.Common
 
             config.AddItem(new MenuItem("Sep1", "花边尝鲜新预判模式").SetShared());
             config.AddItem(new MenuItem("Sep12", "需要充能的技能无法使用新预判").SetShared());
-            config.AddItem(new MenuItem("Sep123", "例如泽拉斯 韦鲁斯无法使用新").SetShared());
+            config.AddItem(new MenuItem("Sep123", "例如泽拉斯 韦鲁斯无法使用").SetShared());
+        }*/
+
+        static Prediction()
+        {
+            Notifications.AddNotification("新预判加载成功!", 4000);
+            var menu = new Menu("Prediction Settings", "predictionsettings", true);
+            menu.AddItem(new MenuItem("predictionmethod", "预判方式").SetShared().SetValue(new StringList(new[] 
+            { "原版库预判", "新预判(极端)", "新预判(正常)" }))).
+            ValueChanged +=Prediction_ValueChanged;
+            menu.AddToMainMenu();
         }
 
         static void Prediction_ValueChanged(object sender, OnValueChangeEventArgs e)

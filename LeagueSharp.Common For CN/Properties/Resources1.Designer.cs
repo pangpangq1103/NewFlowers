@@ -62,18 +62,18 @@ namespace LeagueSharp.Common.Properties {
         
         /// <summary>
         ///   查找类似 {
-        ///    &quot;misc&quot;: &quot;\u6742\u9879&quot;,
-        ///    &quot;dontult&quot;: &quot;\u4e0d\u4f7f\u7528\u5927\u7edd&quot;,
-        ///    &quot;target selector&quot;: &quot;\u76ee\u6807\u0020\u9009\u62e9&quot;,
-        ///    &quot;orbwalker&quot;: &quot;\u8d70\u780d&quot;,
-        ///    &quot;initiator&apos;s list&quot;: &quot;\u5f00\u653b\u5355&quot;,
-        ///    &quot;draw aacirlce oktw\u00a9 style&quot;: &quot;\u986f\u793a\u666e\u653b\u5708 oktw\u00a9 style&quot;,
-        ///    &quot;e shield config&quot;: &quot;E\u76fe\u8a2d\u5b9a&quot;,
-        ///    &quot;iteams&quot;: &quot;\u7269\u4ef6&quot;,
-        ///    &quot;e config&quot;: &quot;E\u8a2d\u5b9a&quot;,
-        ///    &quot;w config&quot;: &quot;W\u8a2d\u5b9a&quot;,
-        ///    &quot;r option&quot;: &quot;R\u9009\u9879&quot;,
-        ///    &quot;r champions&quot;: &quot;R \u82f1\u96c [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///    &quot;yasuo&quot;: &quot;\u75be\u98ce\u5251\u8c6a&quot;,
+        ///    &quot;velkoz&quot;: &quot;\u865a\u7a7a\u4e4b\u773c&quot;,
+        ///    &quot;braum&quot;: &quot;\u5f17\u96f7\u5c14\u5353\u5fb7\u4e4b\u5fc3&quot;,
+        ///    &quot;gnar&quot;: &quot;\u8ff7\u5931\u4e4b\u7259&quot;,
+        ///    &quot;azir&quot;: &quot;\u6c99\u6f20\u7687\u5e1d&quot;,
+        ///    &quot;kalista&quot;: &quot;\u590d\u4ec7\u4e4b\u77db&quot;,
+        ///    &quot;rekSai&quot;: &quot;\u865a\u7a7a\u9041\u5730\u517d&quot;,
+        ///    &quot;bard&quot;: &quot;\u661f\u754c\u6e38\u795e&quot;,
+        ///    &quot;ekko&quot;: &quot;\u65f6\u95f4\u523a\u5ba2&quot;,	
+        ///    &quot;aatrox&quot;: &quot;\u6697\u88d4\u5251\u9b54&quot;,
+        ///    &quot;ahri&quot;: &quot;\u4e5d\u5c3e\u5996\u72d0&quot;,
+        ///    &quot;akali&quot;: &quot;\u6697\u5f71\u4e4b\u [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string ChineseJson {
             get {

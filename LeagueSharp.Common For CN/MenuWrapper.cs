@@ -60,13 +60,13 @@ namespace LeagueSharp.Common
                 _menu.AddSubMenu(_orbwalkerMenu);
             }
 
-            if (addprediction)
+        /*    if (addprediction)
             {
                 // new prediction
                 _predictionMenu = new Menu("Prediction", "perdiction");
                 Prediction.AddToMenu(_predictionMenu);
                 _menu.AddSubMenu(_predictionMenu);
-            }
+            }*/
 
             // Create main menu wrapper
             _mainMenu = new SubMenu(_menu);
@@ -90,10 +90,10 @@ namespace LeagueSharp.Common
             get { return _targetSelectorMenu; }
         }
 
-        public  Menu PredictionMenu
+      /*  public  Menu PredictionMenu
         {
             get { return _predictionMenu; }
-        }
+        }*/
 
         public Menu OrbwalkerMenu
         {
