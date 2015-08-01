@@ -2512,7 +2512,7 @@ namespace LeagueSharp.Common
                                                    ((count - 1)
                                                     * (new double[] { 10, 14, 19, 25, 32 }[level]
                                                        + // Base damage per spear
-                                                       new double[] { 0.5, 0.5, 0.5, 0.5, 0.5 }[
+                                                       new double[] { 0.2, 0.3, 0.4, 0.5, 0.6 }[
                                                            level]
                                                        * (source.BaseAttackDamage
                                                           + source.FlatPhysicalDamageMod)));

@@ -262,6 +262,11 @@ namespace LeagueSharp.Common
         {
             var result = new List<Vector2>();
             var Distance = distance;
+            if (distance < 0)
+            {
+                path[0] = path[0] + distance * (path[1] - path[0]).Normalized();
+                return path;
+            }
             for (var i = 0; i < path.Count - 1; i++)
             {
                 var dist = path[i].Distance(path[i + 1]);
@@ -619,7 +624,7 @@ namespace LeagueSharp.Common
             {
                 for (var i = ActionList.Count - 1; i >= 0; i--)
                 {
-                    if (ActionList[i].Time <= Utils.花边TickCount)
+                    if (ActionList[i].Time <= Utils.TickCount)
                     {
                         try
                         {
@@ -652,7 +657,7 @@ namespace LeagueSharp.Common
 
                 public Action(int time, Callback callback)
                 {
-                    Time = time + Utils.花边TickCount;
+                    Time = time + Utils.TickCount;
                     CallbackObject = callback;
                 }
             }

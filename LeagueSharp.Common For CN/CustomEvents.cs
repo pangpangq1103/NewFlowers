@@ -67,7 +67,7 @@ namespace LeagueSharp.Common
                 {
                     LeagueSharp.Game.OnStart += Game_OnGameStart;
                 }
-                Prediction.GetPrediction(null, 0);
+                //Prediction.GetPrediction(null, 0);
             }
 
             private static void Game_OnGameUpdate(EventArgs args)

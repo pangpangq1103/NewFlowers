@@ -101,7 +101,7 @@ namespace LeagueSharp.Common
         private static readonly Random _random = new Random(DateTime.Now.Millisecond);
 
         public static int castBlockTime = 0;
-        public static int LastAATick = Utils.花边TickCount;
+        public static int LastAATick = Utils.TickCount;
         public static float LastAADelay = 0;
         public static float LastAACastDelay = 0;
         static Orbwalking()
@@ -250,9 +250,9 @@ namespace LeagueSharp.Common
         {
             var AADelay = Math.Max(LastAADelay, Player.AttackDelay * 10000);
 
-            if (LastAATick <= Utils.花边TickCount && castBlockTime <= Utils.花边TickCount && !Player.IsDashing())
+            if (LastAATick <= Utils.TickCount && castBlockTime <= Utils.TickCount && !Player.IsDashing())
             {
-                return Utils.花边TickCount + Game.Ping / 2 + 25 >= LastAATick + Player.AttackDelay * 1000 && Attack;
+                return Utils.TickCount + Game.Ping / 2 + 25 >= LastAATick + Player.AttackDelay * 1000 && Attack;
             }
             return false;
         }
@@ -272,10 +272,10 @@ namespace LeagueSharp.Common
                 return true;
             }
             var AACastDelay = Math.Max(LastAACastDelay, Player.AttackCastDelay * 1000);
-            if (LastAATick <= Utils.花边TickCount)
+            if (LastAATick <= Utils.TickCount)
             {
                 return NoCancelChamps.Contains(Player.ChampionName) 
-                    || (Utils.花边TickCount + Game.Ping / 2 >=
+                    || (Utils.TickCount + Game.Ping / 2 >=
                     LastAATick + AACastDelay + extraWindup);
             }
             return false;
@@ -307,12 +307,12 @@ namespace LeagueSharp.Common
             bool useFixedDistance = true,
             bool randomizeMinDistance = true)
         {
-            if (Utils.花边TickCount - LastMoveCommandT < _delay && !overrideTimer)
+            if (Utils.TickCount - LastMoveCommandT < _delay && !overrideTimer)
             {
                 return;
             }
 
-            LastMoveCommandT = Utils.花边TickCount;
+            LastMoveCommandT = Utils.TickCount;
 
             if (Player.ServerPosition.Distance(position, true) < holdAreaRadius * holdAreaRadius)
             {
@@ -373,7 +373,7 @@ namespace LeagueSharp.Common
                         if (!NoCancelChamps.Contains(Player.ChampionName))
                         {
 
-                            LastAATick = Utils.花边TickCount + Game.Ping + 100 - (int)
+                            LastAATick = Utils.TickCount + Game.Ping + 100 - (int)
                                 (ObjectManager.Player.AttackCastDelay * 1000f);
                             _missileLaunched = false;
                         }
@@ -439,7 +439,7 @@ namespace LeagueSharp.Common
                     (Spell.Target is Obj_AI_Base || Spell.Target is Obj_BarracksDampener 
                     || Spell.Target is Obj_HQ))
                 {
-                    LastAATick = Utils.花边TickCount - Game.Ping / 2;
+                    LastAATick = Utils.TickCount - Game.Ping / 2;
                     _missileLaunched = false;
 
                     if (Spell.Target is Obj_AI_Base)
@@ -911,8 +911,21 @@ namespace LeagueSharp.Common
 
                     foreach (var xMinion in xMinions)
                     {
-                        if (Player.GetAutoAttackDamage(xMinion) >= xMinion.Health)
-                            Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 补刀小兵.Color, 5);
+                        if (Player.CharData.BaseSkinName != "Kalista")
+                        {
+                            if (Player.GetAutoAttackDamage(xMinion) * 0.9 >= xMinion.Health)
+                            {
+                                Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 补刀小兵.Color, 5);
+                            }
+                        }
+                        else 
+                        {
+                            if (Player.GetAutoAttackDamage(xMinion)>= xMinion.Health)
+                            {
+                                Render.Circle.DrawCircle(xMinion.Position, xMinion.BoundingRadius, 补刀小兵.Color, 5);
+                            }
+                        }
+
                     }
                 }
 
