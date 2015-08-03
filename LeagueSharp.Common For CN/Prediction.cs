@@ -518,6 +518,9 @@ namespace LeagueSharp.Common
                 }
                 if (input.Type == SkillshotType.SkillshotLine)
                 {
+                    if (PathTracker.GetCurrentPath(input.Unit).Time < 0.1d || input.Unit.IsWindingUp)
+                        result.Hitchance = HitChance.VeryHigh;
+                    else
                     if (PathTracker.GetAngle(input.From, input.Unit) < 32)
                         result.Hitchance = HitChance.VeryHigh;
                 }
@@ -528,7 +531,7 @@ namespace LeagueSharp.Common
                 }
                 var totalDelay = input.From.Distance(input.Unit.ServerPosition) / input.Speed + input.Delay;
                 var fixRange = (input.Unit.MoveSpeed * totalDelay) / 2;
-                if (input.Unit.Path.Count() == 0 && input.Unit.Position == input.Unit.ServerPosition)
+                if (PathTracker.GetCurrentPath(input.Unit).Time < 0.1d || input.Unit.IsWindingUp)
                 {
                     if (input.From.Distance(input.Unit.ServerPosition) < input.Range - fixRange)
                         result.Hitchance = HitChance.VeryHigh;
@@ -704,12 +707,12 @@ namespace LeagueSharp.Common
                     {
                         var p = pos + input.RealRadius * direction;
 
-                        if (input.Type == SkillshotType.SkillshotLine && true)
+                        if (input.Type == SkillshotType.SkillshotLine && false)
                         {
                             var alpha = (input.From.To2D() - p).AngleBetween(a - b);
                             if (alpha > 50 && alpha < 180 - 50)
                             {
-                                var beta = (float)Math.Asin(input.RealRadius / p.Distance(input.From));
+                                var beta = (float)Math.Asin(input.RealRadius *0.85f / p.Distance(input.From));
                                 var cp1 = input.From.To2D() + (p - input.From.To2D()).Rotated(beta);
                                 var cp2 = input.From.To2D() + (p - input.From.To2D()).Rotated(-beta);
 

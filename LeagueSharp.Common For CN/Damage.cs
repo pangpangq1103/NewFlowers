@@ -5348,8 +5348,6 @@ namespace LeagueSharp.Common
                         return 20 + 8 * source.Level;
                     }
 
-                    if (target.GetBuffCount("gnarw") == 2)
-
                     if (challengingSmite != null)
 
                     {
@@ -5898,7 +5896,7 @@ namespace LeagueSharp.Common
                 // Double-Edged Sword:
                 // + Melee champions: You deal 2% increase damage from all sources, but take 1% increase damage from all sources.
                 // + Ranged champions: You deal and take 1.5% increased damage from all sources. 
-                if (hero.Masteries.Any(m => m.Page == MasteryPage.Offense && m.Id == 65 && m.Points == 1))
+                if (hero.Masteries.Any(m => m.Page == MasteryPage.Offense && m.Id == 68 && m.Points == 1))
                 {
                     amount *= hero.IsMelee() ? 1.02d : 1.015d;
                 }

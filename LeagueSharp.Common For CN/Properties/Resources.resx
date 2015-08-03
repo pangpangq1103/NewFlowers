@@ -120,6 +120,15 @@
   </resheader>
   <data name="ChineseJson" xml:space="preserve">
     <value>{
+    "autopriority": "\u81EA\u52A8\u8BBE\u7F6E\u4F18\u5148",
+    "lowhp": "\u4F4E\u8840\u91CF\u7684\u9017\u6BD4",
+    "mostad": "\u4F18\u5148\u0041\u0044\u0043",
+    "mostap": "\u4F18\u5148\u0041\u0050\u0043",
+    "closest": "\u63A5\u8FD1\u82F1\u96C4\u7684",
+    "nearmouse": "\u9F20\u6807\u9644\u8FD1\u7684",
+    "lessattack": "\u6CA1\u5565\u653B\u51FB\u529B\u7684",
+    "lesscast": "\u6CA1\u5565\u6280\u80FD\u7684",
+    "farmdelay": "\u8865\u5200\u5EF6\u8FDF",
     "yasuo": "\u75be\u98ce\u5251\u8c6a",
     "velkoz": "\u865a\u7a7a\u4e4b\u773c",
     "braum": "\u5f17\u96f7\u5c14\u5353\u5fb7\u4e4b\u5fc3",

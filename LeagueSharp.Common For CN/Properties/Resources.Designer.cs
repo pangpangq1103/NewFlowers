@@ -62,18 +62,17 @@ namespace LeagueSharp.Common.Properties {
         
         /// <summary>
         ///   查找类似 {
+        ///    &quot;autopriority&quot;: &quot;\u81EA\u52A8\u8BBE\u7F6E\u4F18\u5148&quot;,
+        ///    &quot;lowhp&quot;: &quot;\u4F4E\u8840\u91CF\u7684\u9017\u6BD4&quot;,
+        ///    &quot;mostad&quot;: &quot;\u4F18\u5148\u0041\u0044\u0043&quot;,
+        ///    &quot;mostap&quot;: &quot;\u4F18\u5148\u0041\u0050\u0043&quot;,
+        ///    &quot;closest&quot;: &quot;\u63A5\u8FD1\u82F1\u96C4\u7684&quot;,
+        ///    &quot;nearmouse&quot;: &quot;\u9F20\u6807\u9644\u8FD1\u7684&quot;,
+        ///    &quot;lessattack&quot;: &quot;\u6CA1\u5565\u653B\u51FB\u529B\u7684&quot;,
+        ///    &quot;lesscast&quot;: &quot;\u6CA1\u5565\u6280\u80FD\u7684&quot;,
+        ///    &quot;farmdelay&quot;: &quot;\u8865\u5200\u5EF6\u8FDF&quot;,
         ///    &quot;yasuo&quot;: &quot;\u75be\u98ce\u5251\u8c6a&quot;,
-        ///    &quot;velkoz&quot;: &quot;\u865a\u7a7a\u4e4b\u773c&quot;,
-        ///    &quot;braum&quot;: &quot;\u5f17\u96f7\u5c14\u5353\u5fb7\u4e4b\u5fc3&quot;,
-        ///    &quot;gnar&quot;: &quot;\u8ff7\u5931\u4e4b\u7259&quot;,
-        ///    &quot;azir&quot;: &quot;\u6c99\u6f20\u7687\u5e1d&quot;,
-        ///    &quot;kalista&quot;: &quot;\u590d\u4ec7\u4e4b\u77db&quot;,
-        ///    &quot;rekSai&quot;: &quot;\u865a\u7a7a\u9041\u5730\u517d&quot;,
-        ///    &quot;bard&quot;: &quot;\u661f\u754c\u6e38\u795e&quot;,
-        ///    &quot;ekko&quot;: &quot;\u65f6\u95f4\u523a\u5ba2&quot;,	
-        ///    &quot;aatrox&quot;: &quot;\u6697\u88d4\u5251\u9b54&quot;,
-        ///    &quot;ahri&quot;: &quot;\u4e5d\u5c3e\u5996\u72d0&quot;,
-        ///    &quot;akali&quot;: &quot;\u6697\u5f71\u4e4b\u [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///    &quot;ve [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string ChineseJson {
             get {
