@@ -348,17 +348,20 @@ namespace Flowers_TwitchFate
 
             var minioncount = MinionManager.GetMinions(Player.Position, 1500).Count;
 
-            if (minioncount > 0 && 菜单.Item("qxw").GetValue<bool>())
+            if(!菜单.Item("qxw").GetValue<bool>())
             {
-                if (getManaPer > 菜单.Item("qxmp").GetValue<Slider>().Value)
+                if (minioncount > 0)
                 {
-                    if (minioncount >= 3)
-                        CardSelect.StartSelecting(Cards.Red);
+                    if (getManaPer > 菜单.Item("qxmp").GetValue<Slider>().Value)
+                    {
+                        if (minioncount >= 3)
+                            CardSelect.StartSelecting(Cards.Red);
+                        else
+                            CardSelect.StartSelecting(Cards.Blue);
+                    }
                     else
                         CardSelect.StartSelecting(Cards.Blue);
                 }
-                else
-                    CardSelect.StartSelecting(Cards.Blue);
             }
         }
 
@@ -454,7 +457,6 @@ namespace Flowers_TwitchFate
 
         private static void SendWPacket()
         {
-            LastSendWSent = Utils.TickCount;
             ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, false);
         }
 
@@ -463,12 +465,10 @@ namespace Flowers_TwitchFate
             if (ObjectManager.Player.Spellbook.GetSpell(SpellSlot.W).Name == "PickACard" && Status == SelectStatus.Ready)
             {
                 Select = card;
-                if (Utils.TickCount - LastWSent > 200)
+                if (Utils.TickCount - LastWSent > 170 + Game.Ping / 2)
                 {
-                    if (ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, ObjectManager.Player))
-                    {
-                        LastWSent = Utils.TickCount;
-                    }
+                    ObjectManager.Player.Spellbook.CastSpell(SpellSlot.W, ObjectManager.Player);
+                    LastWSent = Utils.TickCount;
                 }
             }
         }
@@ -534,4 +534,5 @@ namespace Flowers_TwitchFate
             }
         }
     }
+
 }
