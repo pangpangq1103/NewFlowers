@@ -30,6 +30,10 @@ namespace Flowers_TwitchFate
         private static Orbwalking.Orbwalker Orbwalker;
         private static Menu 菜单;
         public const string ChampionName = "TwistedFate";
+        //ping Emery
+        private static int LastPingT = 0;
+        private static Vector2 PingLocation;
+
         static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
@@ -44,7 +48,7 @@ namespace Flowers_TwitchFate
 
             Notifications.AddNotification("Flowers Twisted by NightMoon", 1000);
             Notifications.AddNotification("`                  And  Lost`", 1000);
-            Notifications.AddNotification("Version : 1.0.0.3", 1000);
+            Notifications.AddNotification("Version : 1.0.0.5", 1000);
 
             菜单 = new Menu("FL - Twisted Fate", "flowersKappa", true);
 
@@ -55,9 +59,9 @@ namespace Flowers_TwitchFate
             Orbwalker = new Orbwalking.Orbwalker(菜单.AddSubMenu(new Menu("Orbwalker", "Orbwalker")));
 
             菜单.AddSubMenu(new Menu("Combo", "Combo"));
-            菜单.SubMenu("Combo").AddItem(new MenuItem("haha2", "Mana < 20% Auto Blue Card"));
-            菜单.SubMenu("Combo").AddItem(new MenuItem("haha", "Only Active Combo Key~"));
-            菜单.SubMenu("Combo").AddItem(new MenuItem("haha1", "Enjoy your game~"));
+            菜单.SubMenu("Combo").AddItem(new MenuItem("lzq", "Use Q")).SetValue(true);
+            菜单.SubMenu("Combo").AddItem(new MenuItem("lzw", "Use W(Yellow And Blue)")).SetValue(true);
+            菜单.SubMenu("Combo").AddItem(new MenuItem("lzwBMama", "Use Blue Mana <=%", true).SetValue(new Slider(20, 0, 50)));
 
 
             菜单.AddSubMenu(new Menu("Harass", "Harass"));
@@ -86,6 +90,7 @@ namespace Flowers_TwitchFate
             菜单.SubMenu("Misc").AddItem(new MenuItem("tj", "Use W Anti GapCloser")).SetValue(true);
             //x
             菜单.SubMenu("Misc").AddItem(new MenuItem("AutoYellow", "Auto Yellow Card In Uit").SetValue(true));
+            菜单.SubMenu("Misc").AddItem(new MenuItem("PingLH", "Ping Can Kill Emery (Only local)").SetValue(true));
 
             菜单.AddSubMenu(new Menu("Draw", "Draw"));
             //add
@@ -96,9 +101,20 @@ namespace Flowers_TwitchFate
             菜单.SubMenu("Draw").AddItem(new MenuItem("drawingR2", "R Range (MiniMap)").SetValue(new Circle(true, Color.FromArgb(255, 255, 255))));
             菜单.SubMenu("Draw").AddItem(new MenuItem("drawingAA", "Real AA&W Range(花边 Style)").SetValue(true));
             菜单.SubMenu("Draw").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
+            //add
+
+            //Damage after combo:
+            var dmgAfterComboItem = new MenuItem("DamageAfterCombo", "Draw damage after combo").SetValue(true);
+            Utility.HpBarDamageIndicator.DamageToUnit = ComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = dmgAfterComboItem.GetValue<bool>();
+            dmgAfterComboItem.ValueChanged += delegate(object sender, OnValueChangeEventArgs eventArgs)
+            {
+                Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
+            };
+            菜单.SubMenu("Draw").AddItem(dmgAfterComboItem);
 
             菜单.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
-            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.3"));
+            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.4"));
 
             菜单.AddToMainMenu();
 
@@ -214,6 +230,21 @@ namespace Flowers_TwitchFate
                 Render.Circle.DrawCircle(Player.Position, 5500, R范围.Color);
 
         }
+        static float ComboDamage(Obj_AI_Hero hero)
+        {
+            var dmg = 0d;
+            dmg += Player.GetSpellDamage(hero, SpellSlot.Q) * 2;
+            dmg += Player.GetSpellDamage(hero, SpellSlot.W);
+            dmg += Player.GetSpellDamage(hero, SpellSlot.Q);
+
+            if (ObjectManager.Player.GetSpellSlot("SummonerIgnite") != SpellSlot.Unknown)
+            {
+                dmg += ObjectManager.Player.GetSummonerSpellDamage(hero, Damage.SummonerSpell.Ignite);
+            }
+
+            return (float)dmg;
+        }
+
         static void 地图显示(EventArgs args)
         {
             var 小地图R = 菜单.Item("drawingR2").GetValue<Circle>();
@@ -261,48 +292,108 @@ namespace Flowers_TwitchFate
             }
             自动Q();
 
+            PingCanKill();
+
+        }
+
+        static void PingCanKill()
+        {
+            if (菜单.Item("PingLH").GetValue<bool>())
+                foreach (
+                    var enemy in
+                        ObjectManager.Get<Obj_AI_Hero>()
+                            .Where(
+                                h =>
+                                    ObjectManager.Player.Spellbook.CanUseSpell(SpellSlot.R) == SpellState.Ready &&
+                                    h.IsValidTarget() && ComboDamage(h) > h.Health))
+                {
+                    Ping(enemy.Position.To2D());
+                }
+        }
+
+        static void Ping(Vector2 vector2)
+        {
+            if (Utils.TickCount - LastPingT < 30 * 1000)
+            {
+                return;
+            }
+
+            LastPingT = Utils.TickCount;
+            PingLocation = vector2;
+            SimplePing();
+
+            Utility.DelayAction.Add(150, SimplePing);
+            Utility.DelayAction.Add(300, SimplePing);
+            Utility.DelayAction.Add(400, SimplePing);
+            Utility.DelayAction.Add(800, SimplePing);
+        }
+
+        static void SimplePing()
+        {
+            Game.ShowPing(PingCategory.Fallback, PingLocation, true);
         }
 
         static void 连招()
         {
             var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
 
-            if (W.IsReady())
+            if (菜单.Item("lzw").GetValue<bool>())
             {
-                if (target.IsValidTarget(W.Range))
+                if (W.IsReady())
                 {
-                    if (getManaPer < 20)
-                        CardSelect.StartSelecting(Cards.Blue);
-                    else
-                        CardSelect.StartSelecting(Cards.Yellow);
-                }
-            }
-
-            if (Q.IsReady())
-            {
-                if (target.IsValidTarget(Q.Range))
-                {
-                    var Qpre = Q.GetPrediction(target);
-
-
-                    if (Qpre.Hitchance >= HitChance.VeryHigh)
+                    if (target.IsValidTarget(W.Range))
                     {
-                        Q.Cast(Qpre.CastPosition);
-                    }
-
-                    if (Q.IsReady() && 
-                        ((
-                        target.HasBuffOfType(BuffType.Stun) ||
-                        target.HasBuffOfType(BuffType.Snare) ||
-                        target.HasBuffOfType(BuffType.Knockup)
-                        ))
-                        )
-                    {
-                        Q.CastIfHitchanceEquals(target, HitChance.High, true);
+                        if (getManaPer < 菜单.Item("qxmp").GetValue<Slider>().Value)
+                            CardSelect.StartSelecting(Cards.Blue);
+                        else
+                            CardSelect.StartSelecting(Cards.Yellow);
                     }
                 }
             }
 
+            if (菜单.Item("lzq").GetValue<bool>())
+            {
+                if (Q.IsReady())
+                {
+                    if (target.IsValidTarget(Q.Range))
+                    {
+                        var Qpre = Q.GetPrediction(target);
+
+
+                        if (Qpre.Hitchance >= HitChance.VeryHigh)
+                        {
+                            Q.Cast(Qpre.CastPosition);
+                        }
+
+                        if (Q.IsReady() &&
+                            ((
+                            target.HasBuffOfType(BuffType.Stun) ||
+                            target.HasBuffOfType(BuffType.Snare) ||
+                            target.HasBuffOfType(BuffType.Knockup)
+                            ))
+                            )
+                        {
+                            Q.CastIfHitchanceEquals(target, HitChance.High, true);
+                        }
+                    }
+                }
+            }
+
+            KSBlueCard();
+        }
+
+        static void KSBlueCard()
+        {
+            if(!W.IsReady() || Player.HasBuff("PickACard"))
+            {
+                foreach (var target in ObjectManager.Get<Obj_AI_Hero>().Where
+                    (target => !target.IsMe && target.Team != ObjectManager.Player.Team))
+                    if (target.Health < W.GetDamage(target) && Player.Distance(target) < 600 && 
+                        !target.IsDead && target.IsValidTarget())
+                {
+                    CardSelect.StartSelecting(Cards.Blue);
+                }
+            }
         }
 
         static void 骚扰()
