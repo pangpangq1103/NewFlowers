@@ -114,7 +114,7 @@ namespace Flowers_TwitchFate
             菜单.SubMenu("Draw").AddItem(dmgAfterComboItem);
 
             菜单.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
-            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.4"));
+            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.5"));
 
             菜单.AddToMainMenu();
 
@@ -335,13 +335,13 @@ namespace Flowers_TwitchFate
 
         static void 连招()
         {
-            var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
+            var Combotarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
 
             if (菜单.Item("lzw").GetValue<bool>())
             {
                 if (W.IsReady())
                 {
-                    if (target.IsValidTarget(W.Range))
+                    if (Combotarget.IsValidTarget(W.Range))
                     {
                         if (getManaPer < 菜单.Item("qxmp").GetValue<Slider>().Value)
                             CardSelect.StartSelecting(Cards.Blue);
@@ -349,15 +349,26 @@ namespace Flowers_TwitchFate
                             CardSelect.StartSelecting(Cards.Yellow);
                     }
                 }
+
+                if (!W.IsReady() || Player.HasBuff("PickACard"))
+                {
+                    foreach (var target in ObjectManager.Get<Obj_AI_Hero>().Where
+                        (target => !target.IsMe && target.Team != ObjectManager.Player.Team))
+                        if (target.Health < W.GetDamage(target) && Player.Distance(target, true) < 600 &&
+                            !target.IsDead && target.IsValidTarget())
+                        {
+                            CardSelect.StartSelecting(Cards.Blue);
+                        }
+                }
             }
 
             if (菜单.Item("lzq").GetValue<bool>())
             {
                 if (Q.IsReady())
                 {
-                    if (target.IsValidTarget(Q.Range))
+                    if (Combotarget.IsValidTarget(Q.Range))
                     {
-                        var Qpre = Q.GetPrediction(target);
+                        var Qpre = Q.GetPrediction(Combotarget);
 
 
                         if (Qpre.Hitchance >= HitChance.VeryHigh)
@@ -367,31 +378,15 @@ namespace Flowers_TwitchFate
 
                         if (Q.IsReady() &&
                             ((
-                            target.HasBuffOfType(BuffType.Stun) ||
-                            target.HasBuffOfType(BuffType.Snare) ||
-                            target.HasBuffOfType(BuffType.Knockup)
+                            Combotarget.HasBuffOfType(BuffType.Stun) ||
+                            Combotarget.HasBuffOfType(BuffType.Snare) ||
+                            Combotarget.HasBuffOfType(BuffType.Knockup)
                             ))
                             )
                         {
-                            Q.CastIfHitchanceEquals(target, HitChance.High, true);
+                            Q.CastIfHitchanceEquals(Combotarget, HitChance.High, true);
                         }
                     }
-                }
-            }
-
-            KSBlueCard();
-        }
-
-        static void KSBlueCard()
-        {
-            if(!W.IsReady() || Player.HasBuff("PickACard"))
-            {
-                foreach (var target in ObjectManager.Get<Obj_AI_Hero>().Where
-                    (target => !target.IsMe && target.Team != ObjectManager.Player.Team))
-                    if (target.Health < W.GetDamage(target) && Player.Distance(target) < 600 && 
-                        !target.IsDead && target.IsValidTarget())
-                {
-                    CardSelect.StartSelecting(Cards.Blue);
                 }
             }
         }
