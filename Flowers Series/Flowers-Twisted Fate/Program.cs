@@ -28,7 +28,7 @@ namespace Flowers_TwitchFate
         private static Spell W;
         private static Spell R;
         private static Orbwalking.Orbwalker Orbwalker;
-        private static Menu 菜单;
+        private static Menu Menu;
         public const string ChampionName = "TwistedFate";
         //ping Emery
         private static int LastPingT = 0;
@@ -46,61 +46,65 @@ namespace Flowers_TwitchFate
                 return;
             }
 
-            Notifications.AddNotification("Flowers Twisted by NightMoon", 1000);
-            Notifications.AddNotification("`                  And  Lost`", 1000);
-            Notifications.AddNotification("Version : 1.0.0.5", 1000);
+            Game.PrintChat("Flowers " + Player.CharData.BaseSkinName + " Loaded!");
+            Game.PrintChat("Credit : NightMoon!");
+            Notifications.AddNotification("Emmm .", 10000);
+            Notifications.AddNotification("You Don't Need Luck", 10000);
+            Notifications.AddNotification("Because it was so perfect", 10000);
+            Notifications.AddNotification("Flowers Twisted Fate", 10000);
+            Notifications.AddNotification("Credit : NightMoon", 10000);
 
-            菜单 = new Menu("FL - Twisted Fate", "flowersKappa", true);
+            Menu = new Menu("FL - Twisted Fate", "flowersKappa", true);
 
             var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
             TargetSelector.AddToMenu(targetSelectorMenu);
-            菜单.AddSubMenu(targetSelectorMenu);
+            Menu.AddSubMenu(targetSelectorMenu);
 
-            Orbwalker = new Orbwalking.Orbwalker(菜单.AddSubMenu(new Menu("Orbwalker", "Orbwalker")));
+            Orbwalker = new Orbwalking.Orbwalker(Menu.AddSubMenu(new Menu("Orbwalker", "Orbwalker")));
 
-            菜单.AddSubMenu(new Menu("Combo", "Combo"));
-            菜单.SubMenu("Combo").AddItem(new MenuItem("lzq", "Use Q")).SetValue(true);
-            菜单.SubMenu("Combo").AddItem(new MenuItem("lzw", "Use W(Yellow And Blue)")).SetValue(true);
-            菜单.SubMenu("Combo").AddItem(new MenuItem("lzwBMama", "Use Blue Mana <=%", true).SetValue(new Slider(20, 0, 50)));
+            Menu.AddSubMenu(new Menu("Combo", "Combo"));
+            Menu.SubMenu("Combo").AddItem(new MenuItem("lzq", "Use Q")).SetValue(true);
+            Menu.SubMenu("Combo").AddItem(new MenuItem("lzw", "Use W(Yellow And Blue)")).SetValue(true);
+            Menu.SubMenu("Combo").AddItem(new MenuItem("lzwBMama", "Use Blue Mana <=%", true).SetValue(new Slider(20, 0, 50)));
 
 
-            菜单.AddSubMenu(new Menu("Harass", "Harass"));
-            菜单.SubMenu("Harass").AddItem(new MenuItem("srq", "Use Q")).SetValue(true);
-            菜单.SubMenu("Harass").AddItem(new MenuItem("AutoQ", "Auto Q").SetValue(new KeyBind("U".ToCharArray()[0], KeyBindType.Toggle)));
-            菜单.SubMenu("Harass").AddItem(new MenuItem("srw", "Use W(Blue Card)")).SetValue(true);
-            菜单.SubMenu("Harass").AddItem(new MenuItem("srwr", "Use W(Red Card)")).SetValue(true);
+            Menu.AddSubMenu(new Menu("Harass", "Harass"));
+            Menu.SubMenu("Harass").AddItem(new MenuItem("srq", "Use Q")).SetValue(true);
+            Menu.SubMenu("Harass").AddItem(new MenuItem("AutoQ", "Auto Q").SetValue(new KeyBind("U".ToCharArray()[0], KeyBindType.Toggle)));
+            Menu.SubMenu("Harass").AddItem(new MenuItem("srw", "Use W(Blue Card)")).SetValue(true);
+            Menu.SubMenu("Harass").AddItem(new MenuItem("srwr", "Use W(Red Card)")).SetValue(true);
 
-            菜单.AddSubMenu(new Menu("Clear", "Clear"));
-            菜单.SubMenu("Clear").AddItem(new MenuItem("qxq", "Use Q LaneClear").SetValue(true));
-            菜单.SubMenu("Clear").AddItem(new MenuItem("qxw", "Use W LaneClear (Red or Blue)").SetValue(true));
-            菜单.SubMenu("Clear").AddItem(new MenuItem("qxmp", "LC Use Blue Mana <=%", true).SetValue(new Slider(45, 0, 100)));
-            菜单.SubMenu("Clear").AddItem(new MenuItem("qyq", "Use Q JungleClear").SetValue(true));
-            菜单.SubMenu("Clear").AddItem(new MenuItem("qyw", "Use W JungleClear (Red or Blue)").SetValue(true));
-            菜单.SubMenu("Clear").AddItem(new MenuItem("qymp", "JC Use Blue Mana <=%", true).SetValue(new Slider(45, 0, 100)));
+            Menu.AddSubMenu(new Menu("Clear", "Clear"));
+            Menu.SubMenu("Clear").AddItem(new MenuItem("qxq", "Use Q LaneClear").SetValue(true));
+            Menu.SubMenu("Clear").AddItem(new MenuItem("qxw", "Use W LaneClear (Red or Blue)").SetValue(true));
+            Menu.SubMenu("Clear").AddItem(new MenuItem("qxmp", "LC Use Blue Mana <=%", true).SetValue(new Slider(45, 0, 100)));
+            Menu.SubMenu("Clear").AddItem(new MenuItem("qyq", "Use Q JungleClear").SetValue(true));
+            Menu.SubMenu("Clear").AddItem(new MenuItem("qyw", "Use W JungleClear (Red or Blue)").SetValue(true));
+            Menu.SubMenu("Clear").AddItem(new MenuItem("qymp", "JC Use Blue Mana <=%", true).SetValue(new Slider(45, 0, 100)));
 
-            菜单.AddSubMenu(new Menu("Card Select", "CardSelect"));
-            菜单.SubMenu("CardSelect").AddItem(new MenuItem("blue", "Blue Card").SetValue(new KeyBind("E".ToCharArray()[0], KeyBindType.Press)));
-            菜单.SubMenu("CardSelect").AddItem(new MenuItem("yellow", "Yellow Card").SetValue(new KeyBind("W".ToCharArray()[0], KeyBindType.Press)));
-            菜单.SubMenu("CardSelect").AddItem(new MenuItem("red", "Red Card").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            Menu.AddSubMenu(new Menu("Card Select", "CardSelect"));
+            Menu.SubMenu("CardSelect").AddItem(new MenuItem("blue", "Blue Card").SetValue(new KeyBind("E".ToCharArray()[0], KeyBindType.Press)));
+            Menu.SubMenu("CardSelect").AddItem(new MenuItem("yellow", "Yellow Card").SetValue(new KeyBind("W".ToCharArray()[0], KeyBindType.Press)));
+            Menu.SubMenu("CardSelect").AddItem(new MenuItem("red", "Red Card").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
 
-            菜单.AddSubMenu(new Menu("Misc", "Misc"));
-            菜单.SubMenu("Misc").AddItem(new MenuItem("KSQ", "Use Q KS/Stun")).SetValue(true);
+            Menu.AddSubMenu(new Menu("Misc", "Misc"));
+            Menu.SubMenu("Misc").AddItem(new MenuItem("KSQ", "Use Q KS/Stun")).SetValue(true);
             //add
-            菜单.SubMenu("Misc").AddItem(new MenuItem("dd", "Use W Interrupt Spell")).SetValue(true);
-            菜单.SubMenu("Misc").AddItem(new MenuItem("tj", "Use W Anti GapCloser")).SetValue(true);
+            Menu.SubMenu("Misc").AddItem(new MenuItem("dd", "Use W Interrupt Spell")).SetValue(true);
+            Menu.SubMenu("Misc").AddItem(new MenuItem("tj", "Use W Anti GapCloser")).SetValue(true);
             //x
-            菜单.SubMenu("Misc").AddItem(new MenuItem("AutoYellow", "Auto Yellow Card In Uit").SetValue(true));
-            菜单.SubMenu("Misc").AddItem(new MenuItem("PingLH", "Ping Can Kill Emery (Only local)").SetValue(true));
+            Menu.SubMenu("Misc").AddItem(new MenuItem("AutoYellow", "Auto Yellow Card In Uit").SetValue(true));
+            Menu.SubMenu("Misc").AddItem(new MenuItem("PingLH", "Ping Can Kill Emery (Only local)").SetValue(false));
 
-            菜单.AddSubMenu(new Menu("Draw", "Draw"));
+            Menu.AddSubMenu(new Menu("Draw", "Draw"));
             //add
-            菜单.SubMenu("Draw").AddItem(new MenuItem("drawoff", "Disabled All Drawing").SetValue(false));
+            Menu.SubMenu("Draw").AddItem(new MenuItem("drawoff", "Disabled All Drawing").SetValue(false));
             //x
-            菜单.SubMenu("Draw").AddItem(new MenuItem("drawingQ", "Q Range").SetValue(new Circle(true, Color.FromArgb(138, 101, 255))));
-            菜单.SubMenu("Draw").AddItem(new MenuItem("drawingR", "R Range").SetValue(new Circle(true, Color.FromArgb(0, 255, 0))));
-            菜单.SubMenu("Draw").AddItem(new MenuItem("drawingR2", "R Range (MiniMap)").SetValue(new Circle(true, Color.FromArgb(255, 255, 255))));
-            菜单.SubMenu("Draw").AddItem(new MenuItem("drawingAA", "Real AA&W Range(花边 Style)").SetValue(true));
-            菜单.SubMenu("Draw").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
+            Menu.SubMenu("Draw").AddItem(new MenuItem("drawingQ", "Q Range").SetValue(new Circle(true, Color.FromArgb(138, 101, 255))));
+            Menu.SubMenu("Draw").AddItem(new MenuItem("drawingR", "R Range").SetValue(new Circle(true, Color.FromArgb(0, 255, 0))));
+            Menu.SubMenu("Draw").AddItem(new MenuItem("drawingR2", "R Range (MiniMap)").SetValue(new Circle(true, Color.FromArgb(255, 255, 255))));
+            Menu.SubMenu("Draw").AddItem(new MenuItem("drawingAA", "Real AA&W Range(花边 Style)").SetValue(true));
+            Menu.SubMenu("Draw").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
             //add
 
             //Damage after combo:
@@ -111,12 +115,12 @@ namespace Flowers_TwitchFate
             {
                 Utility.HpBarDamageIndicator.Enabled = eventArgs.GetNewValue<bool>();
             };
-            菜单.SubMenu("Draw").AddItem(dmgAfterComboItem);
+            Menu.SubMenu("Draw").AddItem(dmgAfterComboItem);
 
-            菜单.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
-            菜单.AddItem(new MenuItem("Version", "Version : 1.0.0.5"));
+            Menu.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
+            Menu.AddItem(new MenuItem("Version", "Version : 1.0.0.5"));
 
-            菜单.AddToMainMenu();
+            Menu.AddToMainMenu();
 
             Q = new Spell(SpellSlot.Q, 1450f);
             W = new Spell(SpellSlot.W, Orbwalking.GetRealAutoAttackRange(Player));
@@ -136,7 +140,7 @@ namespace Flowers_TwitchFate
 
         static void Interrupter2_OnInterruptableTarget(Obj_AI_Hero target, Interrupter2.InterruptableTargetEventArgs args)
         {
-            if (菜单.Item("dd").GetValue<bool>() && W.IsReady() && W.IsInRange(target))
+            if (Menu.Item("dd").GetValue<bool>() && W.IsReady() && W.IsInRange(target))
             {
                 CardSelect.StartSelecting(Cards.Yellow);
             }
@@ -148,7 +152,7 @@ namespace Flowers_TwitchFate
             {
                 return;
             }
-            if (菜单.Item("tj").GetValue<bool>() && W.IsReady() && W.IsInRange(gapcloser.End))
+            if (Menu.Item("tj").GetValue<bool>() && W.IsReady() && W.IsInRange(gapcloser.End))
             {
                 CardSelect.StartSelecting(Cards.Yellow);
             }
@@ -156,7 +160,7 @@ namespace Flowers_TwitchFate
 
         static void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            var 落地自动黄 = 菜单.Item("AutoYellow").GetValue<bool>();
+            var 落地自动黄 = Menu.Item("AutoYellow").GetValue<bool>();
 
             if (args.SData.Name == "gate" && 落地自动黄)
             {
@@ -172,17 +176,17 @@ namespace Flowers_TwitchFate
 
         static void 范围显示(EventArgs args)
         {
-            var disdraw = 菜单.Item("drawoff").GetValue<bool>();
+            var disdraw = Menu.Item("drawoff").GetValue<bool>();
 
             if (disdraw)
             {
                 return;
             }
 
-            var FlowersStyle = 菜单.Item("drawingAA").GetValue<bool>();
-            var AA目标OKTWStyle = 菜单.Item("orb").GetValue<bool>();
-            var Q范围 = 菜单.Item("drawingQ").GetValue<Circle>();
-            var R范围 = 菜单.Item("drawingR").GetValue<Circle>();
+            var FlowersStyle = Menu.Item("drawingAA").GetValue<bool>();
+            var AA目标OKTWStyle = Menu.Item("orb").GetValue<bool>();
+            var Q范围 = Menu.Item("drawingQ").GetValue<Circle>();
+            var R范围 = Menu.Item("drawingR").GetValue<Circle>();
 
             if (FlowersStyle)
             {
@@ -247,7 +251,7 @@ namespace Flowers_TwitchFate
 
         static void 地图显示(EventArgs args)
         {
-            var 小地图R = 菜单.Item("drawingR2").GetValue<Circle>();
+            var 小地图R = Menu.Item("drawingR2").GetValue<Circle>();
 
             if (小地图R.Active)
             {
@@ -262,13 +266,13 @@ namespace Flowers_TwitchFate
                 return;
             }
 
-            if (菜单.Item("yellow").GetValue<KeyBind>().Active)
+            if (Menu.Item("yellow").GetValue<KeyBind>().Active)
                 CardSelect.StartSelecting(Cards.Yellow);
 
-            if (菜单.Item("blue").GetValue<KeyBind>().Active)
+            if (Menu.Item("blue").GetValue<KeyBind>().Active)
                 CardSelect.StartSelecting(Cards.Blue);
 
-            if (菜单.Item("red").GetValue<KeyBind>().Active)
+            if (Menu.Item("red").GetValue<KeyBind>().Active)
                 CardSelect.StartSelecting(Cards.Red);
 
             switch (Orbwalker.ActiveMode)
@@ -286,7 +290,7 @@ namespace Flowers_TwitchFate
                     break;
             }
 
-            if (菜单.Item("AutoQ").GetValue<KeyBind>().Active)
+            if (Menu.Item("AutoQ").GetValue<KeyBind>().Active)
             {
                 骚扰();
             }
@@ -298,7 +302,7 @@ namespace Flowers_TwitchFate
 
         static void PingCanKill()
         {
-            if (菜单.Item("PingLH").GetValue<bool>())
+            if (Menu.Item("PingLH").GetValue<bool>())
                 foreach (
                     var enemy in
                         ObjectManager.Get<Obj_AI_Hero>()
@@ -337,13 +341,13 @@ namespace Flowers_TwitchFate
         {
             var Combotarget = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
 
-            if (菜单.Item("lzw").GetValue<bool>())
+            if (Menu.Item("lzw").GetValue<bool>())
             {
                 if (W.IsReady())
                 {
                     if (Combotarget.IsValidTarget(W.Range))
                     {
-                        if (getManaPer < 菜单.Item("qxmp").GetValue<Slider>().Value)
+                        if (getManaPer < Menu.Item("qxmp").GetValue<Slider>().Value)
                             CardSelect.StartSelecting(Cards.Blue);
                         else
                             CardSelect.StartSelecting(Cards.Yellow);
@@ -362,7 +366,7 @@ namespace Flowers_TwitchFate
                 }
             }
 
-            if (菜单.Item("lzq").GetValue<bool>())
+            if (Menu.Item("lzq").GetValue<bool>())
             {
                 if (Q.IsReady())
                 {
@@ -384,7 +388,7 @@ namespace Flowers_TwitchFate
                             ))
                             )
                         {
-                            Q.CastIfHitchanceEquals(Combotarget, HitChance.High, true);
+                            Q.CastIfHitchanceEquals(Combotarget, HitChance.VeryHigh, true);
                         }
                     }
                 }
@@ -394,7 +398,7 @@ namespace Flowers_TwitchFate
         static void 骚扰()
         {
             var target = TargetSelector.GetTarget(1300, TargetSelector.DamageType.Physical);
-            if (Q.IsReady() && (菜单.Item("srq").GetValue<bool>()))
+            if (Q.IsReady() && (Menu.Item("srq").GetValue<bool>()))
             {
                 var Qprediction = Q.GetPrediction(target);
 
@@ -408,12 +412,12 @@ namespace Flowers_TwitchFate
         {
             var target = TargetSelector.GetTarget(1300, TargetSelector.DamageType.Physical);
 
-            if (Player.Distance(target.ServerPosition) < Player.AttackRange - 40 && !菜单.Item("srw").GetValue<bool>())
+            if (Player.Distance(target.ServerPosition) < Player.AttackRange - 40 && !Menu.Item("srw").GetValue<bool>())
             {
                 CardSelect.StartSelecting(Cards.Blue);
             }
 
-            if (Player.Distance(target, true) < Player.AttackRange - 150 && !菜单.Item("srwr").GetValue<bool>())
+            if (Player.Distance(target, true) < Player.AttackRange - 150 && !Menu.Item("srwr").GetValue<bool>())
             {
                 CardSelect.StartSelecting(Cards.Red);
             }
@@ -423,7 +427,7 @@ namespace Flowers_TwitchFate
         static void 清线()
         {
 
-            if (Q.IsReady() && 菜单.Item("qxq").GetValue<bool>() && getManaPer > 40)
+            if (Q.IsReady() && Menu.Item("qxq").GetValue<bool>() && getManaPer > 40)
             {
                 var allMinionsQ = MinionManager.GetMinions(Player.ServerPosition, Q.Range, MinionTypes.All, MinionTeam.Enemy);
                 var locQ = Q.GetLineFarmLocation(allMinionsQ);
@@ -434,11 +438,11 @@ namespace Flowers_TwitchFate
 
             var minioncount = MinionManager.GetMinions(Player.Position, 1500).Count;
 
-            if(!菜单.Item("qxw").GetValue<bool>())
+            if(!Menu.Item("qxw").GetValue<bool>())
             {
                 if (minioncount > 0)
                 {
-                    if (getManaPer > 菜单.Item("qxmp").GetValue<Slider>().Value)
+                    if (getManaPer > Menu.Item("qxmp").GetValue<Slider>().Value)
                     {
                         if (minioncount >= 3)
                             CardSelect.StartSelecting(Cards.Red);
@@ -460,14 +464,14 @@ namespace Flowers_TwitchFate
             if (mobs.Count <= 0)
                 return;
 
-            if (Q.IsReady() && 菜单.Item("qyq").GetValue<bool>() && getManaPer > 45)
+            if (Q.IsReady() && Menu.Item("qyq").GetValue<bool>() && getManaPer > 45)
             {
                 Q.Cast(mobs[0].Position);
             }
 
-            if (W.IsReady() && 菜单.Item("qyw").GetValue<bool>())
+            if (W.IsReady() && Menu.Item("qyw").GetValue<bool>())
             {
-                if (getManaPer > 菜单.Item("qymp").GetValue<Slider>().Value)
+                if (getManaPer > Menu.Item("qymp").GetValue<Slider>().Value)
                 {
                     if (mobs.Count >= 2)
                         CardSelect.StartSelecting(Cards.Red);
@@ -479,7 +483,7 @@ namespace Flowers_TwitchFate
         static void 自动Q()
         {
 
-            if (!菜单.Item("KSQ").GetValue<bool>())
+            if (!Menu.Item("KSQ").GetValue<bool>())
                 return;
 
             foreach (Obj_AI_Hero target in ObjectManager.Get<Obj_AI_Hero>().Where(x => x.IsValidTarget(Q.Range) && x.IsEnemy 
@@ -495,13 +499,13 @@ namespace Flowers_TwitchFate
                 }
             }
 
-            if (Player.Spellbook.CanUseSpell(SpellSlot.Q) == SpellState.Ready && !菜单.Item("KSQ").GetValue<bool>())
+            if (Player.Spellbook.CanUseSpell(SpellSlot.Q) == SpellState.Ready && !Menu.Item("KSQ").GetValue<bool>())
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                 {
                     if (enemy.IsValidTarget(Q.Range * 2))
                     {
                         var pred = Q.GetPrediction(enemy);
-                        if ((pred.Hitchance == HitChance.Immobile && !菜单.Item("KSQ").GetValue<bool>()))
+                        if ((pred.Hitchance == HitChance.Immobile && !Menu.Item("KSQ").GetValue<bool>()))
                         {
                             Q.Cast(enemy);
                         }
