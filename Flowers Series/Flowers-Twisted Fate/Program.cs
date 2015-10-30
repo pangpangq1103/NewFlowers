@@ -56,15 +56,11 @@ namespace Flowers_TwitchFate
 
             Menu = new Menu("FL - Twisted Fate", "flowersKappa", true);
 
-            var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
-            TargetSelector.AddToMenu(targetSelectorMenu);
-            Menu.AddSubMenu(targetSelectorMenu);
-
             Orbwalker = new Orbwalking.Orbwalker(Menu.AddSubMenu(new Menu("Orbwalker", "Orbwalker")));
 
             Menu.AddSubMenu(new Menu("Combo", "Combo"));
             Menu.SubMenu("Combo").AddItem(new MenuItem("lzq", "Use Q")).SetValue(true);
-            Menu.SubMenu("Combo").AddItem(new MenuItem("lzw", "Use W(Yellow And Blue)")).SetValue(true);
+            Menu.SubMenu("Combo").AddItem(new MenuItem("lzw", "Use W(Yellow or Blue)")).SetValue(true);
             Menu.SubMenu("Combo").AddItem(new MenuItem("lzwBMama", "Use Blue Mana <=%", true).SetValue(new Slider(20, 0, 50)));
 
 
@@ -104,7 +100,6 @@ namespace Flowers_TwitchFate
             Menu.SubMenu("Draw").AddItem(new MenuItem("drawingR", "R Range").SetValue(new Circle(true, Color.FromArgb(0, 255, 0))));
             Menu.SubMenu("Draw").AddItem(new MenuItem("drawingR2", "R Range (MiniMap)").SetValue(new Circle(true, Color.FromArgb(255, 255, 255))));
             Menu.SubMenu("Draw").AddItem(new MenuItem("drawingAA", "Real AA&W Range(花边 Style)").SetValue(true));
-            Menu.SubMenu("Draw").AddItem(new MenuItem("orb", "AA Target(OKTW© Style)").SetValue(true));
             //add
 
             //Damage after combo:
@@ -118,7 +113,6 @@ namespace Flowers_TwitchFate
             Menu.SubMenu("Draw").AddItem(dmgAfterComboItem);
 
             Menu.AddItem(new MenuItem("Credit", "Credit : NightMoon"));
-            Menu.AddItem(new MenuItem("Version", "Version : 1.0.0.5"));
 
             Menu.AddToMainMenu();
 
@@ -184,7 +178,6 @@ namespace Flowers_TwitchFate
             }
 
             var FlowersStyle = Menu.Item("drawingAA").GetValue<bool>();
-            var AA目标OKTWStyle = Menu.Item("orb").GetValue<bool>();
             var Q范围 = Menu.Item("drawingQ").GetValue<Circle>();
             var R范围 = Menu.Item("drawingR").GetValue<Circle>();
 
@@ -210,21 +203,6 @@ namespace Flowers_TwitchFate
                     }
 
                     Render.Circle.DrawCircle(Player.Position, Orbwalking.GetRealAutoAttackRange(Player), FlowersAAStyle ,2);
-            }
-
-            if (AA目标OKTWStyle)
-            {
-                var orbT = Orbwalker.GetTarget();
-
-                if (orbT.IsValidTarget())
-                {
-                    if (orbT.Health > orbT.MaxHealth * 0.6)
-                        Render.Circle.DrawCircle(orbT.Position, orbT.BoundingRadius + 15, System.Drawing.Color.GreenYellow);
-                    else if (orbT.Health > orbT.MaxHealth * 0.3)
-                        Render.Circle.DrawCircle(orbT.Position, orbT.BoundingRadius + 15, System.Drawing.Color.Orange);
-                    else
-                        Render.Circle.DrawCircle(orbT.Position, orbT.BoundingRadius + 15, System.Drawing.Color.Red);
-                }
             }
 
             if (Q.IsReady() && Q范围.Active)
@@ -343,52 +321,20 @@ namespace Flowers_TwitchFate
 
             if (Menu.Item("lzw").GetValue<bool>())
             {
-                if (W.IsReady())
+                if (W.IsReady() || Player.HasBuff("PickACard"))
                 {
                     if (Combotarget.IsValidTarget(W.Range))
                     {
-                        if (getManaPer < Menu.Item("qxmp").GetValue<Slider>().Value)
-                            CardSelect.StartSelecting(Cards.Blue);
-                        else
-                            CardSelect.StartSelecting(Cards.Yellow);
-                    }
-                }
-
-                if (!W.IsReady() || Player.HasBuff("PickACard"))
-                {
-                    foreach (var target in ObjectManager.Get<Obj_AI_Hero>().Where
-                        (target => !target.IsMe && target.Team != ObjectManager.Player.Team))
+                        foreach (var target in ObjectManager.Get<Obj_AI_Hero>().Where
+                            (target => !target.IsMe && target.Team != ObjectManager.Player.Team))
                         if (target.Health < W.GetDamage(target) && Player.Distance(target, true) < 600 &&
-                            !target.IsDead && target.IsValidTarget())
+                                !target.IsDead && target.IsValidTarget())
                         {
                             CardSelect.StartSelecting(Cards.Blue);
                         }
-                }
-            }
-
-            if (Menu.Item("lzq").GetValue<bool>())
-            {
-                if (Q.IsReady())
-                {
-                    if (Combotarget.IsValidTarget(Q.Range))
-                    {
-                        var Qpre = Q.GetPrediction(Combotarget);
-
-
-                        if (Qpre.Hitchance >= HitChance.VeryHigh)
+                        else
                         {
-                            Q.Cast(Qpre.CastPosition);
-                        }
-
-                        if (Q.IsReady() &&
-                            ((
-                            Combotarget.HasBuffOfType(BuffType.Stun) ||
-                            Combotarget.HasBuffOfType(BuffType.Snare) ||
-                            Combotarget.HasBuffOfType(BuffType.Knockup)
-                            ))
-                            )
-                        {
-                            Q.CastIfHitchanceEquals(Combotarget, HitChance.VeryHigh, true);
+                            CardSelect.StartSelecting(Cards.Yellow);
                         }
                     }
                 }
@@ -499,18 +445,17 @@ namespace Flowers_TwitchFate
                 }
             }
 
-            if (Player.Spellbook.CanUseSpell(SpellSlot.Q) == SpellState.Ready && !Menu.Item("KSQ").GetValue<bool>())
-                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+            {
+                if (enemy.IsValidTarget(Q.Range * 2))
                 {
-                    if (enemy.IsValidTarget(Q.Range * 2))
+                    var pred = Q.GetPrediction(enemy);
+                    if ((pred.Hitchance == HitChance.Immobile))
                     {
-                        var pred = Q.GetPrediction(enemy);
-                        if ((pred.Hitchance == HitChance.Immobile && !Menu.Item("KSQ").GetValue<bool>()))
-                        {
-                            Q.Cast(enemy);
-                        }
+                        Q.Cast(enemy);
                     }
                 }
+            }
         }
     }
     //  This  is Esk0r CardSelect ~  GitHub:Github.com/Esk0r/LeagueSharp/
