@@ -12,7 +12,7 @@
         public static Version Version;
 
         //Update by h3h3
-        internal static void Game_OnGameLoad(EventArgs args)
+        internal static void Check()
         {
             Task.Factory.StartNew(
                 () =>
@@ -24,7 +24,7 @@
                         {
                             var rawVersion =
                                 c.DownloadString(
-                                    "https://github.com/CHA2172886/NewFlowers/blob/master/CheckVersion/DuoHeYi.cs");
+                                    "https://github.com/CHA2172886/NewFlowers/blob/master/CheckVersion/Tristana.cs");
 
                             var match =
                                 new Regex(
@@ -47,6 +47,11 @@
                                 if (gitVersion != Version)
                                 {
                                     Game.PrintChat("<font color=\"#FF0000\">The Sprites is outdate!</font> Please Update to New Version!");
+                                }
+                                else
+                                {
+                                    Game.PrintChat("<font color=\"#FF0000\">Welcome to Tristana World!</font> - Credit:NightMoon");
+                                    Game.PrintChat("<font color=\"#FF0000\">The Sprites is Update!</font>");
                                 }
                             }
                         }

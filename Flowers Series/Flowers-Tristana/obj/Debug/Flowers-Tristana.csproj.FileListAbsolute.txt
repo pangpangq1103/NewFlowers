@@ -1,14 +1,1 @@
 C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\Flowers-Tristana.exe.config
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\Flowers-Tristana.exe
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\Flowers-Tristana.pdb
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\LeagueSharp.Common.dll
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\LeagueSharp.dll
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\SharpDX.Direct3D9.dll
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\SharpDX.dll
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\clipper_library.dll
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\LeagueSharp.Sandbox.dll
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\obj\Debug\Flowers-Tristana.csprojResolveAssemblyReference.cache
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\obj\Debug\Flowers_Tristana.Properties.Resources.resources
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\obj\Debug\Flowers-Tristana.csproj.GenerateResource.Cache
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\obj\Debug\Flowers-Tristana.exe
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\obj\Debug\Flowers-Tristana.pdb

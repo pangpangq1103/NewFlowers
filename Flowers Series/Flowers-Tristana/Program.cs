@@ -1,5 +1,6 @@
 ﻿namespace Flowers_Tristana
 {
+
     #region
 
     using LeagueSharp;
@@ -14,10 +15,6 @@
 
     #endregion
 
-
-    /// <summary>
-    /// OKTW 自动眼位
-    /// </summary>
     public class HiddenObj
     {
         public int type;
@@ -31,7 +28,6 @@
         public Vector3 LastVisablePos { get; set; }
         public float LastVisableTime { get; set; }
         public Vector3 PredictedPos { get; set; }
-
         public float StartRecallTime { get; set; }
         public float AbortRecallTime { get; set; }
         public float FinishRecallTime { get; set; }
@@ -83,6 +79,7 @@
 
             LoadMenu();
             LoadSpells();
+            CheckVersion.Check();
 
             foreach (var hero in ObjectManager.Get<Obj_AI_Hero>())
             {
@@ -352,7 +349,7 @@
         /// <summary>
         /// 音乐播放
         /// </summary>
-        /// <param name="sound"></param>
+        /// <param name="音乐"></param>
         //public static void PlaySound(SoundPlayer sound = null)
         //{
         //    if (sound != null)
@@ -422,11 +419,21 @@
                     if(Target.IsValidTarget(E.Range))
                     {
                         Youmeng.Cast();
+
+                        if(Menu.Item("nightmoon.q.youmeng").GetValue<bool>() && CanCastQ() && Youmeng.Cast())
+                        {
+                            Q.Cast();
+                        }
                     }
 
                     if(Player.CountEnemiesInRange(1200) < 2 && Menu.Item("nightmoon.item.youmeng.dush").GetValue<bool>())
                     {
                         Youmeng.Cast();
+
+                        if (Menu.Item("nightmoon.q.youmeng").GetValue<bool>() && CanCastQ() && Youmeng.Cast())
+                        {
+                            Q.Cast();
+                        }
                     }
                 }
             }
@@ -582,7 +589,7 @@
                                         enemy.Health
                                   select enemy)
             {
-                if(R.IsReady() &&CanCastR())
+                if(CanCastR())
                 {
                     R.CastOnUnit(enemy);
                     return;
@@ -601,7 +608,7 @@
                     (x => x.Health).FirstOrDefault(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Physical, R.Range) && !x.ECanKill());
                 if (Target != null)
                 {
-                    if(R.IsReady() && CanCastR())
+                    if(CanCastR())
                     {
                         R.CastOnUnit(Target);
                     }
@@ -625,7 +632,7 @@
                         return;
                     }
 
-                    if(E.IsReady() && CanCastE())
+                    if(CanCastE())
                     {
                         E.CastOnUnit(minion);
                         Orbwalker.ForceTarget(minion);
@@ -648,11 +655,22 @@
 
             ItemUse();
 
-            if (E.IsReady() && E.IsInRange(target) && Menu.Item("nightmoon." + target.ChampionName + "euse").GetValue<bool>() && CanCastE())
+            if (!Menu.Item("nightmoon.q.onlye").GetValue<bool>() && Menu.Item("nightmoon.q.combo").GetValue<bool>())
+            {
+                if(target.IsValidTarget(E.Range))
+                {
+                    if (CanCastQ())
+                    {
+                        Q.Cast();
+                    }
+                }
+            }
+
+            if (E.IsInRange(target) && Menu.Item("nightmoon." + target.ChampionName + "euse").GetValue<bool>() && CanCastE())
             {
                 E.CastOnUnit(target);
 
-                if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && Q.IsReady() && !E.IsReady())
+                if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && !E.IsReady())
                 {
                     Q.Cast();
                 }
@@ -663,7 +681,7 @@
                 var dangerenemy =HeroManager.Enemies.Where(e => R.CanCast(e)).OrderBy(enemy => enemy.Distance(Player)).FirstOrDefault();
                 if (dangerenemy != null)
                 {
-                    if(R.IsReady() && CanCastR())
+                    if(CanCastR())
                     {
                         R.CastOnUnit(dangerenemy);
                     }
@@ -699,7 +717,7 @@
             {
                 if (gapcloser.End.Distance(ObjectManager.Player.Position) <= 200 && gapcloser.Sender.IsValidTarget(R.Range))
                 {
-                    if(CanCastR() && R.IsReady())
+                    if(CanCastR())
                     {
                         R.CastOnUnit(gapcloser.Sender);
                     }
@@ -718,7 +736,7 @@
             {
                 if (args.DangerLevel >= Interrupter2.DangerLevel.High && sender.IsValidTarget(R.Range))
                 {
-                    if(CanCastR() && R.IsReady())
+                    if(CanCastR())
                     {
                         R.CastOnUnit(sender);
                     }
@@ -732,7 +750,7 @@
         /// <returns></returns>
         public static bool CanCastR()
         {
-            if (Player.ManaPercent > Menu.Item("nightmoon.r.mana").GetValue<Slider>().Value)
+            if (Player.ManaPercent > Menu.Item("nightmoon.r.mana").GetValue<Slider>().Value && R.IsReady())
             {
                 return true;
             }
@@ -748,7 +766,7 @@
         /// <returns></returns>
         public static bool CanCastE()
         {
-            if(Player.ManaPercent > Menu.Item("nightmoon.e.mana").GetValue<Slider>().Value)
+            if(Player.ManaPercent > Menu.Item("nightmoon.e.mana").GetValue<Slider>().Value && E.IsReady())
             {
                 return true;
             }
@@ -764,7 +782,7 @@
         /// <returns></returns>
         public static bool CanCastQ()
         {
-            if (Player.ManaPercent > Menu.Item("nightmoon.q.mana").GetValue<Slider>().Value)
+            if (Player.ManaPercent > Menu.Item("nightmoon.q.mana").GetValue<Slider>().Value && Q.IsReady())
             {
                 return true;
             }
@@ -859,7 +877,7 @@
                 {
                     if (target.Type == GameObjectType.obj_AI_Turret || target.Type == GameObjectType.obj_Turret)
                     {
-                        if (E.IsReady() && CanCastE())
+                        if (CanCastE())
                         {
                             E.CastOnUnit(target as Obj_AI_Base);
                         }
@@ -925,7 +943,7 @@
                 }
             }
 
-            if (Menu.Item("nightmoon.draw.rks").GetValue<Circle>().Active && CanCastR() && R.IsReady())
+            if (Menu.Item("nightmoon.draw.rks").GetValue<Circle>().Active && CanCastR())
             {
                 foreach (var Target in HeroManager.Enemies.Where(x => x.isKillableAndValidTarget(R.GetDamage(x), TargetSelector.DamageType.Magical)))
                 {
@@ -1059,7 +1077,9 @@
             Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("nightmoon.orbwalking.setting"));
 
             Menu.AddSubMenu(new Menu("[FL] 技能设置", "nightmoon.spell.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.DarkBlue));
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.combo", "连招时智能使用Q").SetValue(true));//1
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.jc", "使用Q自动清野").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.youmeng", "使用幽梦连招后自动Q").SetValue(true));//1
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.onlye", "仅使用E后再用Q").SetTooltip("对方身上有E才用Q攻击").SetValue(false));//1
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.tower", "自动E塔").SetTooltip("自动E塔").SetValue(true));//1
             //Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.tower", "E塔后自动接Q").SetTooltip("附近木有英雄才这样").SetValue(false));
