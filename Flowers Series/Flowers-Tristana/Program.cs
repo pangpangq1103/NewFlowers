@@ -81,18 +81,19 @@
 
             Menu.AddItem(new MenuItem("nightmoon.menu.lanuguage", "Language Switch (Need F5): ").SetValue(new StringList(new[] { "English", "Chinese" }, 0)));
 
-            if (Menu.Item("nightmoon.menu.load").GetValue<StringList>().SelectedIndex == 0)
+            Menu.AddItem(new MenuItem("nightmoon.credit", "Credit : NightMoon"));
+
+            Menu.AddToMainMenu();
+
+            if (Menu.Item("nightmoon.menu.lanuguage").GetValue<StringList>().SelectedIndex == 0)
             {
                 LoadEnglish();
             }
-            else if (Menu.Item("nightmoon.menu.load").GetValue<StringList>().SelectedIndex == 1)
+            else if (Menu.Item("nightmoon.menu.lanuguage").GetValue<StringList>().SelectedIndex == 1)
             {
                 LoadMenu();
             }
 
-            Menu.AddItem(new MenuItem("nightmoon.credit", "Credit : NightMoon"));
-
-            Menu.AddToMainMenu();
 
             LoadSpells();
             CheckVersion.Check();
