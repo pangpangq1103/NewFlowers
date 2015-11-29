@@ -284,13 +284,13 @@
         }
 
         /// <summary>
-        /// 自动R狮子狗跟螳螂 (在ScienceAFK的小炮中提取) And OKTW的自动插眼
+        /// 自动R狮子狗跟螳螂 (在ScienceARK的小炮中提取) And OKTW的自动插眼
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
         private static void GameObject_OnCreate(GameObject sender, EventArgs args)
         {
-            //Credit ScienceAFK
+            //Credit ScienceARK
             var Rengar = HeroManager.Enemies.Find(heros => heros.ChampionName.Equals("Rengar"));
             var Khazix = HeroManager.Enemies.Find(heros => heros.ChampionName.Equals("Khazix"));
 
