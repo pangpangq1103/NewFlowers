@@ -76,8 +76,24 @@
                 return;
             }
 
+            Menu = new Menu("Flowers - Tristana", "FLTA", true);
+            Menu.SetFontStyle(FontStyle.Regular, SharpDX.Color.Red);
 
-            LoadMenu();
+            Menu.AddItem(new MenuItem("nightmoon.menu.lanuguage", "Language Switch (Need F5): ").SetValue(new StringList(new[] { "English", "Chinese" }, 0)));
+
+            if (Menu.Item("nightmoon.menu.load").GetValue<StringList>().SelectedIndex == 0)
+            {
+                LoadEnglish();
+            }
+            else if (Menu.Item("nightmoon.menu.load").GetValue<StringList>().SelectedIndex == 1)
+            {
+                LoadMenu();
+            }
+
+            Menu.AddItem(new MenuItem("nightmoon.credit", "Credit : NightMoon"));
+
+            Menu.AddToMainMenu();
+
             LoadSpells();
             CheckVersion.Check();
 
@@ -1066,13 +1082,10 @@
         }
 
         /// <summary>
-        /// 菜单
+        /// 中文菜单
         /// </summary>
         private static void LoadMenu()
         {
-            Menu = new Menu("Flowers - Tristana", "FLTA", true);
-            Menu.SetFontStyle(FontStyle.Regular, SharpDX.Color.Red);
-
             Menu.AddSubMenu(new Menu("走砍设置", "nightmoon.orbwalking.setting"));
             Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("nightmoon.orbwalking.setting"));
 
@@ -1126,9 +1139,67 @@
             Menu.SubMenu("nightmoon.draw.setting").AddItem(new MenuItem("nightmoon.draw.rks", "显示R击杀目标").SetValue(new Circle(true, Color.Red)));//1
 
             Menu.AddItem(new MenuItem("nightmoon.sound.bool", "开局音效").SetValue(true));
-            Menu.AddItem(new MenuItem("nightmoon.credit", "Credit : NightMoon"));
+        }
 
-            Menu.AddToMainMenu();
+        /// <summary>
+        /// 英文菜单
+        /// </summary>
+        private static void LoadEnglish()
+        {
+            Menu.AddSubMenu(new Menu("[FL] Orbwalker Setting", "nightmoon.orbwalking.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("nightmoon.orbwalking.setting"));
+
+            Menu.AddSubMenu(new Menu("[FL] Spells Setting", "nightmoon.spell.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.combo", "Use Q In Combo").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.jc", "Use Q In Jungle").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.youmeng", "Auto Q If Use Ghostblade").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.onlye", "Only Have E buffs Use Q").SetValue(false));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.tower", "Auto E Towers").SetValue(true));//1
+            //Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.tower", "If E Tower Auto Q").SetValue(false));
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.uselist", "Use E list:"));//1
+            foreach (var enemy in HeroManager.Enemies)
+            {
+                Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon." + enemy.ChampionName + "euse", "Heros :" + enemy.ChampionName).SetValue(true));//1
+            }
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.forcetarget", "Force Attack E Target").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.quickharass", "Use E QuickHarass").SetTooltip("if a minion will died and enemy will heart").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.r.self", "Use R 丨If Hp <=%").SetValue(new Slider(20)));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.r.ks", "Use R Killsteal")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.re.ks", "Use R+E Killsteal")).SetValue(true);//1
+
+            Menu.AddSubMenu(new Menu("[FL] Misc Setting", "nightmoon.misc.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.misc.setting").AddItem(new MenuItem("nightmoon.r.gap", "Use R AntiGapcloser")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.misc.setting").AddItem(new MenuItem("nightmoon.r.rk", "Use R Anti Rengar&Khazix")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.misc.setting").AddItem(new MenuItem("nightmoon.r.int", "Use R Interrupter")).SetValue(true);//1
+
+            Menu.AddSubMenu(new Menu("[FL] Mana Manager", "nightmoon.mana.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.mana.setting").AddItem(new MenuItem("nightmoon.q.mana", "Whole Use Q Mana Control").SetValue(new Slider(10)));//1
+            Menu.SubMenu("nightmoon.mana.setting").AddItem(new MenuItem("nightmoon.e.mana", "Whole Use E Mana Control").SetValue(new Slider(15)));//1
+            Menu.SubMenu("nightmoon.mana.setting").AddItem(new MenuItem("nightmoon.r.mana", "Whole Use R Mana Control").SetValue(new Slider(10)));//1
+
+            Menu.AddSubMenu(new Menu("[FL] Items Use", "nightmoon.item.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.item.setting").AddItem(new MenuItem("nightmoon.item.youmeng", "Use Ghostblade")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.item.setting").AddItem(new MenuItem("nightmoon.item.youmeng.dush", "Use Ghostblade To 1v1")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.item.setting").AddItem(new MenuItem("nightmoon.item.blige", "Use Cutlass")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.item.setting").AddItem(new MenuItem("nightmoon.item.blige.enemyhp", "Enemy Hp <=%").SetValue(new Slider(80)));//1
+            Menu.SubMenu("nightmoon.item.setting").AddItem(new MenuItem("nightmoon.item.borke", "Use Borke")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.item.setting").AddItem(new MenuItem("nightmoon.item.borke.enemyhp", "Enemy Hp <=%").SetValue(new Slider(80)));//1
+            Menu.SubMenu("nightmoon.item.setting").AddItem(new MenuItem("nightmoon.item.borke.mehp", "My Hp <=%").SetValue(new Slider(60)));//1
+
+            Menu.AddSubMenu(new Menu("[FL] Auto Ward", "nightmoon.ward.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.ward.setting").AddItem(new MenuItem("nightmoon.ward.auto", "Auto Ward").SetValue(true));//1
+            Menu.SubMenu("nightmoon.ward.setting").AddItem(new MenuItem("nightmoon.ward.autoblue", "Auto Use Blue").SetValue(true));//1
+            Menu.SubMenu("nightmoon.ward.setting").AddItem(new MenuItem("nightmoon.ward.onlycombo", "Only Combo").SetValue(true));//1
+            Menu.SubMenu("nightmoon.ward.setting").AddItem(new MenuItem("nightmoon.ward.buyblue", "Auto Buy Blue In Lv9").SetValue(false));//1
+            Menu.SubMenu("nightmoon.ward.setting").AddItem(new MenuItem("nightmoon.ward.pink", "Auto Pink Ward").SetValue(true));//1
+            Menu.SubMenu("nightmoon.ward.setting").AddItem(new MenuItem("nightmoon.thanks.sebby", "Credit:Sebby, Thanks God").SetValue(true));//1
+
+            Menu.AddSubMenu(new Menu("[FL] Draw Setting", "nightmoon.draw.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.draw.setting").AddItem(new MenuItem("nightmoon.draw.e", "Draw E Bomb Range")).SetTooltip("Credit God!").SetValue(true);//1
+            Menu.SubMenu("nightmoon.draw.setting").AddItem(new MenuItem("nightmoon.draw.eks", "Draw E Killsteal Target").SetValue(new Circle(true, Color.Red)));//1
+            Menu.SubMenu("nightmoon.draw.setting").AddItem(new MenuItem("nightmoon.draw.rks", "Draw R Killsteal Target").SetValue(new Circle(true, Color.Red)));//1
+
+            //Menu.AddItem(new MenuItem("nightmoon.sound.bool", "Play Sound").SetValue(true));
         }
 
         /// <summary>

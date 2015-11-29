@@ -1,1 +1,4 @@
 C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tristana\Flowers-Tristana\bin\Debug\Flowers-Tristana.exe.config
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Tristana\bin\Debug\Flowers-Tristana.exe.config
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Tristana\obj\Debug\Flowers-Tristana.exe
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Tristana\obj\Debug\Flowers-Tristana.pdb
