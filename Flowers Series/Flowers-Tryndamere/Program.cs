@@ -36,8 +36,25 @@ namespace 花边_蛮子
             }
 
             LoadTryndamereSpells();
-            LoadTryndamereMenu();
 
+            Menu = new Menu("Flowers - Tryndamere", "FLTD", true);
+
+            Menu.AddItem(new MenuItem("nightmoon.notify.2", "                         ", true));
+            Menu.AddItem(new MenuItem("nightmoon.menu.language", "Language Switch (Need F5): ").SetValue(new StringList(new[] { "English", "Chinese" }, 0)));
+            Menu.AddItem(new MenuItem("nightmoon.notify.3", "                         ", true));
+            Menu.AddItem(new MenuItem("nightmoon.Credit", "Credit:NightMoon", true));
+
+            if (Menu.Item("nightmoon.menu.language").GetValue<StringList>().SelectedIndex == 0)
+            {
+                LoadMenu();
+            }
+            else if (Menu.Item("nightmoon.menu.language").GetValue<StringList>().SelectedIndex == 1)
+            {
+                LoadTryndamereMenu();
+            }
+            
+
+            Menu.AddToMainMenu();
             AttackableUnit.OnDamage += AttackableUnit_OnDamage;
             Game.OnUpdate += Game_OnUpdate;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
@@ -264,7 +281,6 @@ namespace 花边_蛮子
 
         static void LoadTryndamereMenu()
         {
-            Menu = new Menu("Flowers - Tryndamere", "FLTD", true);
             var orbMenu = new Menu("[FL] 走砍设置", "nightmoon.orbwalker.menu");
             Orbwalker = new Orbwalking.Orbwalker(orbMenu);
             Menu.AddSubMenu(orbMenu);
@@ -289,12 +305,36 @@ namespace 花边_蛮子
             itemssummersMenu.AddItem(new MenuItem("nightmoon.useCtBk.items", "使用 弯刀/破败", true).SetValue(true));
             itemssummersMenu.AddItem(new MenuItem("nightmoon.useOmen.items", "使用 蓝盾", true).SetValue(true));
             Menu.AddSubMenu(itemssummersMenu);
+        }
 
-            Menu.AddItem(new MenuItem("nightmoon.notify.2", "                         ", true));
+        private static void LoadMenu()
+        {
+            var orbMenu = new Menu("[FL] Orbwalker Setting", "nightmoon.orbwalker.menu");
+            Orbwalker = new Orbwalking.Orbwalker(orbMenu);
+            Menu.AddSubMenu(orbMenu);
 
-            Menu.AddItem(new MenuItem("nightmoon.Credit", "Credit:NightMoon", true));
+            Menu.AddItem(new MenuItem("nightmoon.notify.0", "                          "));
 
-            Menu.AddToMainMenu();
+            var SpellsMenu = new Menu("[FL] Spells Setting", "nightmoon.spells.menu");
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useQ.Spells", "Auto Q", true).SetValue(true));
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useQbelow.Spells", "Use Q丨If Hp <=%", true).SetValue(new Slider(20, 0, 100)));
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useW.Spells", "Auto W", true).SetValue(true));
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useWfacetoface.Spells", "Auto W(Face to Face)", true).SetValue(false));
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useE.Spells", "Auto E", true).SetValue(true));
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useEKillsteal.Spells", "Auto E Killsteal", true).SetValue(true));
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useEFlee.Spells", "Flee Key")).SetValue(new KeyBind('Z', KeyBindType.Press));
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useR.Spells", "Auto R", true).SetValue(true));
+            SpellsMenu.AddItem(new MenuItem("nightmoon.useRbelow.Spells", "Use R丨If Hp <=%").SetValue(new Slider(15, 0, 95)));
+            Menu.AddSubMenu(SpellsMenu);
+
+            Menu.AddItem(new MenuItem("nightmoon.notify.1", "                         ", true));
+
+            var itemssummersMenu = new Menu("[FL] Summoner&Items", "nightmoon.items&summers.menu");
+            itemssummersMenu.AddItem(new MenuItem("nightmoon.useDoT.summers", "Use Ignite", true).SetValue(true));
+            itemssummersMenu.AddItem(new MenuItem("nightmoon.useTyHt.items", "Use Tiamat/Hydra", true).SetValue(true));
+            itemssummersMenu.AddItem(new MenuItem("nightmoon.useCtBk.items", "Use Cutlass/BotRK", true).SetValue(true));
+            itemssummersMenu.AddItem(new MenuItem("nightmoon.useOmen.items", "Use Omem", true).SetValue(true));
+            Menu.AddSubMenu(itemssummersMenu);
         }
 
         static void LoadTryndamereSpells()
