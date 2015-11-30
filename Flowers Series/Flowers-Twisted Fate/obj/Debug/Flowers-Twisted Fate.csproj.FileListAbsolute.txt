@@ -1,0 +1,12 @@
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\Flowers-TwistedFate.exe.config
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\Flowers-TwistedFate.exe
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\Flowers-TwistedFate.pdb
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\LeagueSharp.Common.dll
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\LeagueSharp.dll
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\SharpDX.dll
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\SharpDX.Direct3D9.dll
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\clipper_library.dll
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\bin\Release\LeagueSharp.Sandbox.dll
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\obj\Debug\Flowers-Twisted Fate.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\obj\Debug\Flowers-TwistedFate.exe
+C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Twisted Fate\obj\Debug\Flowers-TwistedFate.pdb
