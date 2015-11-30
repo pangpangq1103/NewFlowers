@@ -659,7 +659,8 @@
         {
             foreach (var enemy in from enemy in HeroManager.Enemies.Where(e => R.CanCast(e))
                                   let etargetstacks = enemy.Buffs.Find(buff => buff.Name == "tristanaecharge")
-                                  where R.GetDamage(enemy) + E.GetDamage(enemy) + etargetstacks?.Count * 0.30 * E.GetDamage(enemy) >= enemy.Health
+                                  where R.GetDamage(enemy) + E.GetDamage(enemy) + etargetstacks?.Count * 0.30 * E.GetDamage(enemy) >=
+                                        enemy.Health
                                   select enemy)
             {
                 if(CanCastR())
@@ -1275,9 +1276,11 @@
         /// </summary>
         private static void LoadSpells()
         {
-            Q = new Spell(SpellSlot.Q);
-            E = new Spell(SpellSlot.E, 630);
-            R = new Spell(SpellSlot.R, 630);
+            Q = new Spell(SpellSlot.Q, 700);
+            W = new Spell(SpellSlot.W, 900);
+            W.SetSkillshot(0.50f, 250f, 1400f, false, SkillshotType.SkillshotCircle);
+            E = new Spell(SpellSlot.E, 700);
+            R = new Spell(SpellSlot.R, 700);
         }
 
     }
