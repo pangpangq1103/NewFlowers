@@ -19,12 +19,11 @@
                 {
                     try
                     {
-                        // updater by h3h3
                         using (var c = new WebClient())
                         {
                             var rawVersion =
                                 c.DownloadString(
-                                    "https://github.com/CHA2172886/NewFlowers/blob/master/CheckVersion/Tristana.cs");
+                                    "https://github.com/CHA2172886/NewFlowers/blob/master/Flowers%20Series/Flowers-Tristana/Properties/AssemblyInfo.cs");
 
                             var match =
                                 new Regex(
