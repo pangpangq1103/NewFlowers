@@ -659,8 +659,7 @@
         {
             foreach (var enemy in from enemy in HeroManager.Enemies.Where(e => R.CanCast(e))
                                   let etargetstacks = enemy.Buffs.Find(buff => buff.Name == "tristanaecharge")
-                                  where R.GetDamage(enemy) + E.GetDamage(enemy) + etargetstacks?.Count * 0.30 * E.GetDamage(enemy) >=
-                                        enemy.Health
+                                  where R.GetDamage(enemy) + E.GetDamage(enemy) + etargetstacks?.Count * 0.30 * E.GetDamage(enemy) >= enemy.Health
                                   select enemy)
             {
                 if(CanCastR())
