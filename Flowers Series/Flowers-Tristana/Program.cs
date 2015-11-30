@@ -411,6 +411,63 @@
             REKS();
             AutoWardBuySebby();
             AutoWardLogicBySebby();
+            ELogic();
+
+            if (Menu.Item("nightmoon.w.key").GetValue<KeyBind>().Active)
+            {
+                W.Cast(Game.CursorPos);
+                Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
+            }
+        }
+
+        private static void ELogic()
+        {
+            var target = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
+
+            if (target == null || !target.IsValidTarget())
+            {
+                return;
+            }
+
+            if(Menu.Item("nightmoon.e.key").GetValue<KeyBind>().Active && CanCastE())
+            {
+                if(target.ECanKill())
+                {
+                    E.CastOnUnit(target);
+                }
+
+                if(Player.CountEnemiesInRange(1200) == 1)
+                {
+                    if(Player.HealthPercent >= target.HealthPercent && Player.Level + 1 >= target.Level)
+                    {
+                        E.CastOnUnit(target);
+
+                        if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && !E.IsReady())
+                        {
+                            Q.Cast();
+                        }
+                    }
+                    else if(Player.HealthPercent + 20 >= target.HealthPercent && Player.HealthPercent >= 40 && Player.Level + 2 >= target.Level)
+                    {
+                        E.CastOnUnit(target);
+
+                        if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && !E.IsReady())
+                        {
+                            Q.Cast();
+                        }
+                    }
+                }
+
+                if (E.IsInRange(target) && Menu.Item("nightmoon." + target.ChampionName + "euse").GetValue<bool>())
+                {
+                    E.CastOnUnit(target);
+
+                    if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && !E.IsReady())
+                    {
+                        Q.Cast();
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -718,10 +775,9 @@
                 return;
             }
 
-            var lvl = (7 * (Player.Level - 1));
-            Q.Range = 605 + lvl;
-            E.Range = 635 + lvl;
-            R.Range = 635 + lvl;
+            Q.Range = 600 + 5 * (Player.Level - 1);
+            E.Range = 630 + 7 * (Player.Level - 1);
+            R.Range = 630 + 7 * (Player.Level - 1);
         }
 
         /// <summary>
@@ -862,25 +918,12 @@
                                     Q.Cast();
                                 }
                             }
-
-
-                            //Obj_AI_Base Turret = (args.Target.Type == GameObjectType.obj_AI_Turret || args.Target.Type == GameObjectType.obj_Turret) ? (Obj_AI_Base)args.Target : null; 
-                            //if (Turret.HasBuff("tristanaechargesound") || Turret.HasBuff("tristanaecharge"))
-                            //{
-                            //    if(Menu.Item("nightmoon.q.tower").GetValue<bool>())
-                            //    {
-                            //        if (!Player.IsWindingUp && Player.CountEnemiesInRange(1000) < 1 && CanCastQ())
-                            //        {
-                            //            Q.Cast();
-                            //        }
-                            //    }
-                            //}
                             break;
                         }
                 }
             }
         }
-
+    
         /// <summary>
         /// 攻击后检测放E打塔的条件
         /// </summary>
@@ -897,6 +940,11 @@
                         if (CanCastE())
                         {
                             E.CastOnUnit(target as Obj_AI_Base);
+
+                            if (!Player.IsWindingUp && Player.CountEnemiesInRange(1000) < 1 && CanCastQ() && Menu.Item("nightmoon.q.tower").GetValue<bool>())
+                            {
+                                Q.Cast();
+                            }
                         }
                     }
                 }
@@ -1095,13 +1143,16 @@
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.jc", "使用Q自动清野").SetValue(true));//1
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.youmeng", "使用幽梦连招后自动Q").SetValue(true));//1
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.onlye", "仅使用E后再用Q").SetTooltip("对方身上有E才用Q攻击").SetValue(false));//1
+
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.w.key", "W跳到鼠标位置").SetValue(new KeyBind("Z".ToCharArray()[0], KeyBindType.Press)));
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.tower", "自动E塔").SetTooltip("自动E塔").SetValue(true));//1
-            //Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.tower", "E塔后自动接Q").SetTooltip("附近木有英雄才这样").SetValue(false));
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.tower", "E塔后自动接Q").SetTooltip("附近木有英雄才这样").SetValue(false));
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.uselist", "使用E对象:").SetTooltip("自动E英雄列表"));//1
             foreach (var enemy in HeroManager.Enemies)
             {
                 Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon." + enemy.ChampionName + "euse", "英雄:" + enemy.ChampionName).SetValue(true));//1
             }
+            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.key", "手动E按键").SetValue(new KeyBind("E".ToCharArray()[0], KeyBindType.Press)));
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.forcetarget", "集中攻击被E的目标").SetValue(true));//1
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.quickharass", "使用E快速骚扰").SetTooltip("当一个要死的小兵附近有英雄并且放E爆炸能吃伤害 就放E给小兵自动击杀小兵").SetValue(true));//1
             Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.r.self", "使用R自保-自己Hp最低百分比").SetValue(new Slider(20)));//1
@@ -1151,22 +1202,31 @@
             Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("nightmoon.orbwalking.setting"));
 
             Menu.AddSubMenu(new Menu("[FL] Spells Setting", "nightmoon.spell.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.combo", "Use Q In Combo").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.jc", "Use Q In Jungle").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.youmeng", "Auto Q If Use Ghostblade").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.onlye", "Only Have E buffs Use Q").SetValue(false));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.tower", "Auto E Towers").SetValue(true));//1
-            //Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.tower", "If E Tower Auto Q").SetValue(false));
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.uselist", "Use E list:"));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddSubMenu(new Menu("[FL] Q Setting", "nightmoon.q.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.combo", "Use Q In Combo").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.jc", "Use Q In Jungle").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.youmeng", "Auto Q If Use Ghostblade").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.onlye", "Only Have E buffs Use Q").SetValue(false));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.tower", "If E Tower Auto Q | Only Not Enemy in Ranges").SetValue(false));
+
+            Menu.SubMenu("nightmoon.spell.setting").AddSubMenu(new Menu("[FL] W Setting", "nightmoon.w.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.w.setting").AddItem(new MenuItem("nightmoon.w.key", "Jump To Mouse").SetValue(new KeyBind("Z".ToCharArray()[0], KeyBindType.Press)));
+
+            Menu.SubMenu("nightmoon.spell.setting").AddSubMenu(new Menu("[FL] E Setting", "nightmoon.e.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.tower", "Auto E Towers").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.uselist", "Use E list(Combo):"));//1
             foreach (var enemy in HeroManager.Enemies)
             {
-                Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon." + enemy.ChampionName + "euse", "Heros :" + enemy.ChampionName).SetValue(true));//1
+                Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon." + enemy.ChampionName + "euse", "Heros :" + enemy.ChampionName).SetValue(true));//1
             }
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.forcetarget", "Force Attack E Target").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.quickharass", "Use E QuickHarass").SetTooltip("if a minion will died and enemy will heart").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.r.self", "Use R 丨If Hp <=%").SetValue(new Slider(20)));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.r.ks", "Use R Killsteal")).SetValue(true);//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.re.ks", "Use R+E Killsteal")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.key", "Semi-Automatic E Key").SetValue(new KeyBind("E".ToCharArray()[0], KeyBindType.Press)));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.forcetarget", "Force Attack E Target").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.quickharass", "Use E QuickHarass").SetTooltip("if a minion will died and enemy will heart").SetValue(true));//1
+
+            Menu.SubMenu("nightmoon.spell.setting").AddSubMenu(new Menu("[FL] R Setting", "nightmoon.r.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.r.setting").AddItem(new MenuItem("nightmoon.r.self", "Use R 丨If Hp <=%").SetValue(new Slider(20)));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.r.setting").AddItem(new MenuItem("nightmoon.r.ks", "Use R Killsteal")).SetValue(true);//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.r.setting").AddItem(new MenuItem("nightmoon.re.ks", "Use R+E Killsteal")).SetValue(true);//1
 
             Menu.AddSubMenu(new Menu("[FL] Misc Setting", "nightmoon.misc.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
             Menu.SubMenu("nightmoon.misc.setting").AddItem(new MenuItem("nightmoon.r.gap", "Use R AntiGapcloser")).SetValue(true);//1
