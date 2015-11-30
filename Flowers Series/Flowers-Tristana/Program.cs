@@ -1139,25 +1139,32 @@
             Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("nightmoon.orbwalking.setting"));
 
             Menu.AddSubMenu(new Menu("[FL] 技能设置", "nightmoon.spell.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.DarkBlue));
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.combo", "连招时智能使用Q").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.jc", "使用Q自动清野").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.youmeng", "使用幽梦连招后自动Q").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.onlye", "仅使用E后再用Q").SetTooltip("对方身上有E才用Q攻击").SetValue(false));//1
 
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.w.key", "W跳到鼠标位置").SetValue(new KeyBind("Z".ToCharArray()[0], KeyBindType.Press)));
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.tower", "自动E塔").SetTooltip("自动E塔").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.q.tower", "E塔后自动接Q").SetTooltip("附近木有英雄才这样").SetValue(false));
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.uselist", "使用E对象:").SetTooltip("自动E英雄列表"));//1
+            Menu.SubMenu("nightmoon.spell.setting").AddSubMenu(new Menu("[FL] Q 设置", "nightmoon.q.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.combo", "连招时智能使用Q").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.jc", "使用Q自动清野").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.youmeng", "使用幽梦连招后自动Q").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.onlye", "仅使用E后再用Q").SetTooltip("对方身上有E才用Q攻击").SetValue(false));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.tower", "E塔后自动接Q").SetTooltip("附近木有英雄才这样").SetValue(false));
+
+            Menu.SubMenu("nightmoon.spell.setting").AddSubMenu(new Menu("[FL] W 设置", "nightmoon.w.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.w.setting").AddItem(new MenuItem("nightmoon.w.key", "W跳到鼠标位置").SetValue(new KeyBind("Z".ToCharArray()[0], KeyBindType.Press)));
+
+            Menu.SubMenu("nightmoon.spell.setting").AddSubMenu(new Menu("[FL] E 设置", "nightmoon.e.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.tower", "自动E塔").SetTooltip("自动E塔").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.uselist", "使用E对象:").SetTooltip("自动E英雄列表"));//1
             foreach (var enemy in HeroManager.Enemies)
             {
-                Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon." + enemy.ChampionName + "euse", "英雄:" + enemy.ChampionName).SetValue(true));//1
+                Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon." + enemy.ChampionName + "euse", "英雄:" + enemy.ChampionName).SetValue(true));//1
             }
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.key", "手动E按键").SetValue(new KeyBind("E".ToCharArray()[0], KeyBindType.Press)));
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.forcetarget", "集中攻击被E的目标").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.e.quickharass", "使用E快速骚扰").SetTooltip("当一个要死的小兵附近有英雄并且放E爆炸能吃伤害 就放E给小兵自动击杀小兵").SetValue(true));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.r.self", "使用R自保-自己Hp最低百分比").SetValue(new Slider(20)));//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.r.ks", "R击杀")).SetTooltip("R的伤害足够才释放").SetValue(true);//1
-            Menu.SubMenu("nightmoon.spell.setting").AddItem(new MenuItem("nightmoon.re.ks", "R+E击杀")).SetTooltip("R+E的伤害足够才释放").SetValue(true);//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.key", "手动E按键").SetValue(new KeyBind("E".ToCharArray()[0], KeyBindType.Press)));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.forcetarget", "集中攻击被E的目标").SetValue(true));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.e.setting").AddItem(new MenuItem("nightmoon.e.quickharass", "使用E快速骚扰").SetTooltip("当一个要死的小兵附近有英雄并且放E爆炸能吃伤害 就放E给小兵自动击杀小兵").SetValue(true));//1
+
+            Menu.SubMenu("nightmoon.spell.setting").AddSubMenu(new Menu("[FL] R 设置", "nightmoon.r.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.r.setting").AddItem(new MenuItem("nightmoon.r.self", "使用R自保-自己Hp最低百分比").SetValue(new Slider(20)));//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.r.setting").AddItem(new MenuItem("nightmoon.r.ks", "R击杀")).SetTooltip("R的伤害足够才释放").SetValue(true);//1
+            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.r.setting").AddItem(new MenuItem("nightmoon.re.ks", "R+E击杀")).SetTooltip("R+E的伤害足够才释放").SetValue(true);//1
 
             Menu.AddSubMenu(new Menu("[FL] 反突打断", "nightmoon.misc.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.CadetBlue));
             Menu.SubMenu("nightmoon.misc.setting").AddItem(new MenuItem("nightmoon.r.gap", "使用R反突进")).SetValue(true);//1
@@ -1202,7 +1209,8 @@
             Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("nightmoon.orbwalking.setting"));
 
             Menu.AddSubMenu(new Menu("[FL] Spells Setting", "nightmoon.spell.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
-            Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddSubMenu(new Menu("[FL] Q Setting", "nightmoon.q.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
+
+            Menu.SubMenu("nightmoon.spell.setting").AddSubMenu(new Menu("[FL] Q Setting", "nightmoon.q.setting").SetFontStyle(FontStyle.Regular, SharpDX.Color.GreenYellow));
             Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.combo", "Use Q In Combo").SetValue(true));//1
             Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.jc", "Use Q In Jungle").SetValue(true));//1
             Menu.SubMenu("nightmoon.spell.setting").SubMenu("nightmoon.q.setting").AddItem(new MenuItem("nightmoon.q.youmeng", "Auto Q If Use Ghostblade").SetValue(true));//1
