@@ -43,8 +43,9 @@ namespace 花边_蛮子
             Menu.AddItem(new MenuItem("nightmoon.menu.language", "Language Switch (Need F5): ").SetValue(new StringList(new[] { "English", "Chinese" }, 0)));
             Menu.AddItem(new MenuItem("nightmoon.notify.3", "                         ", true));
             Menu.AddItem(new MenuItem("nightmoon.Credit", "Credit:NightMoon", true));
-
-            if (Menu.Item("nightmoon.menu.language").GetValue<StringList>().SelectedIndex == 0)
+            Menu.AddToMainMenu();
+			
+			if (Menu.Item("nightmoon.menu.language").GetValue<StringList>().SelectedIndex == 0)
             {
                 LoadMenu();
             }
@@ -52,9 +53,7 @@ namespace 花边_蛮子
             {
                 LoadTryndamereMenu();
             }
-            
-
-            Menu.AddToMainMenu();
+			
             AttackableUnit.OnDamage += AttackableUnit_OnDamage;
             Game.OnUpdate += Game_OnUpdate;
             Obj_AI_Base.OnProcessSpellCast += Obj_AI_Base_OnProcessSpellCast;
