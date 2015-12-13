@@ -436,9 +436,31 @@
                     E.CastOnUnit(target);
                 }
 
-                if(Player.CountEnemiesInRange(1200) == 1)
+                if(Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
                 {
-                    if(Player.HealthPercent >= target.HealthPercent && Player.Level + 1 >= target.Level)
+                    if (Player.CountEnemiesInRange(1200) == 1)
+                    {
+                        if (Player.HealthPercent >= target.HealthPercent && Player.Level + 1 >= target.Level)
+                        {
+                            E.CastOnUnit(target);
+
+                            if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && !E.IsReady())
+                            {
+                                Q.Cast();
+                            }
+                        }
+                        else if (Player.HealthPercent + 20 >= target.HealthPercent && Player.HealthPercent >= 40 && Player.Level + 2 >= target.Level)
+                        {
+                            E.CastOnUnit(target);
+
+                            if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && !E.IsReady())
+                            {
+                                Q.Cast();
+                            }
+                        }
+                    }
+
+                    if (E.IsInRange(target) && Menu.Item("nightmoon." + target.ChampionName + "euse").GetValue<bool>())
                     {
                         E.CastOnUnit(target);
 
@@ -446,25 +468,6 @@
                         {
                             Q.Cast();
                         }
-                    }
-                    else if(Player.HealthPercent + 20 >= target.HealthPercent && Player.HealthPercent >= 40 && Player.Level + 2 >= target.Level)
-                    {
-                        E.CastOnUnit(target);
-
-                        if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && !E.IsReady())
-                        {
-                            Q.Cast();
-                        }
-                    }
-                }
-
-                if (E.IsInRange(target) && Menu.Item("nightmoon." + target.ChampionName + "euse").GetValue<bool>())
-                {
-                    E.CastOnUnit(target);
-
-                    if (Menu.Item("nightmoon.q.onlye").GetValue<bool>() && CanCastQ() && !E.IsReady())
-                    {
-                        Q.Cast();
                     }
                 }
             }
@@ -933,17 +936,20 @@
         {
             if(Menu.Item("nightmoon.e.tower").GetValue<bool>())
             {
-                if (unit.IsMe && target != null)
+                if(Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LaneClear)
                 {
-                    if (target.Type == GameObjectType.obj_AI_Turret || target.Type == GameObjectType.obj_Turret)
+                    if (unit.IsMe && target != null)
                     {
-                        if (CanCastE())
+                        if (target.Type == GameObjectType.obj_AI_Turret || target.Type == GameObjectType.obj_Turret)
                         {
-                            E.CastOnUnit(target as Obj_AI_Base);
-
-                            if (!Player.IsWindingUp && Player.CountEnemiesInRange(1000) < 1 && CanCastQ() && Menu.Item("nightmoon.q.tower").GetValue<bool>())
+                            if (CanCastE())
                             {
-                                Q.Cast();
+                                E.CastOnUnit(target as Obj_AI_Base);
+
+                                if (!Player.IsWindingUp && Player.CountEnemiesInRange(1000) < 1 && CanCastQ() && Menu.Item("nightmoon.q.tower").GetValue<bool>())
+                                {
+                                    Q.Cast();
+                                }
                             }
                         }
                     }
