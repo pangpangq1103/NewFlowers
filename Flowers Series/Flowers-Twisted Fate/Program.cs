@@ -124,7 +124,7 @@ namespace Flowers_TwitchFate
                 CardSelect.StartSelecting(Cards.Yellow);
             }
 
-            if (Player.HasBuff("goldcardlock") && Orbwalking.InAutoAttackRange(target))
+            if (Player.HasBuff("goldcardpreattack") && Orbwalking.InAutoAttackRange(target))
             {
                 Player.IssueOrder(GameObjectOrder.AttackUnit, target);
             }
@@ -141,7 +141,7 @@ namespace Flowers_TwitchFate
                 CardSelect.StartSelecting(Cards.Yellow);
             }
 
-            if(Player.HasBuff("goldcardlock") && Orbwalking.InAutoAttackRange(gapcloser.Sender))
+            if(Player.HasBuff("goldcardpreattack") && Orbwalking.InAutoAttackRange(gapcloser.Sender))
             {
                 Player.IssueOrder(GameObjectOrder.AttackUnit, gapcloser.Sender);
             }
