@@ -1,2 +1,0 @@
-C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Flowers-Tryndamere\Flowers-Tryndamere\bin\Debug\花边_蛮子.exe.config
-C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Tryndamere\bin\Debug\花边_蛮子.exe.config
