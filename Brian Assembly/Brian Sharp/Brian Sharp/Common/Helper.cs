@@ -54,18 +54,7 @@
         {
             get
             {
-                return 600
-                       * //(Player.HasMastery(MasteryData.Scout) && idk what is this ? what is Scout ????
-                         //             i will find this 
-                         //             Id = 4314,
-                         //             Name = "Scout",
-                         //             Tree = MasteryPage.Utility,
-                         //             RequiredId = 0,
-                         //             ByteId = 68
-                       (GetWardSlot != null
-                          && new[] { 3340, 3361, 3362 }.Contains((int)GetWardSlot.Id)
-                              ? 1.15f
-                              : 1);
+                return 600;
             }
         }
 
