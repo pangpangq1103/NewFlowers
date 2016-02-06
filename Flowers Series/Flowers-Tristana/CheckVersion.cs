@@ -50,7 +50,6 @@
                                 else
                                 {
                                     Game.PrintChat("<font color=\"#FF0000\">Welcome to Tristana World!</font> - Credit:NightMoon");
-                                    Game.PrintChat("<font color=\"#FF0000\">The Sprites is Update!</font>");
                                 }
                             }
                         }

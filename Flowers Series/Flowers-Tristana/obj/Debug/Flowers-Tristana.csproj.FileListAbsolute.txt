@@ -1,2 +1,15 @@
 C:\Users\Administrator\Documents\GitHub\NewFlowers\Flowers Series\Flowers-Tristana\bin\Release\Flowers-Tristana.exe.config
 D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\Flowers-Tristana.exe.config
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\Flowers-Tristana.exe
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\Flowers-Tristana.pdb
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\LeagueSharp.Common.dll
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\LeagueSharp.dll
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\SharpDX.Direct3D9.dll
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\SharpDX.dll
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\clipper_library.dll
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\bin\Release\LeagueSharp.Sandbox.dll
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\obj\Debug\Flowers-Tristana.csprojResolveAssemblyReference.cache
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\obj\Debug\Flowers_Tristana.Properties.Resources.resources
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\obj\Debug\Flowers-Tristana.csproj.GenerateResource.Cache
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\obj\Debug\Flowers-Tristana.exe
+D:\GitHub\L#专用外国源\Flowers Series\Flowers-Tristana\obj\Debug\Flowers-Tristana.pdb
