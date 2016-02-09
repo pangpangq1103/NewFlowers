@@ -22,7 +22,6 @@
         public static Spell Q, W, E, R;
         public static Menu Menu;
         public static Orbwalking.Orbwalker Orbwalker;
-        public static bool rengar = false;
 
         static void Main(string[] args)
         {
