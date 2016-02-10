@@ -89,6 +89,8 @@ namespace Flowers_Brand
                 Menu.SubMenu("nightmoon.misc.Menu").AddItem(new MenuItem("nightmoon.misc.eqgap", "E+Q AntiGapcloser", true).SetValue(true));
                 Menu.SubMenu("nightmoon.misc.Menu").AddItem(new MenuItem("nightmoon.misc.eqint", "E+Q Interrupter", true).SetValue(true));
                 Menu.SubMenu("nightmoon.misc.Menu").AddItem(new MenuItem("nightmoon.misc.packet", "Use Packet", true).SetValue(true));
+                Menu.SubMenu("nightmoon.misc.Menu").AddItem(new MenuItem("PredictionMODE", "Prediction MODE", true).SetValue(new StringList(new[] { "Common prediction", "OKTW© PREDICTION" }, 1)));
+                Menu.SubMenu("nightmoon.misc.Menu").AddItem(new MenuItem("HitChance", "Hit Chance", true).SetValue(new StringList(new[] { "Very High", "High", "Medium" }, 0)));
 
                 Menu.AddSubMenu(new Menu("[FL] Draw Menu", "nightmoon.draw.Menu"));
                 Menu.SubMenu("nightmoon.draw.Menu").AddItem(new MenuItem("nightmoon.draw.enable", "Enable Drawing Circle", true).SetValue(true));
@@ -202,7 +204,7 @@ namespace Flowers_Brand
                             {
                                 if (ComboW)
                                     if (W.IsReady())
-                                        W.Cast(e, UsePacket);
+                                        OKTWSpellCast(W, e);
                             }
                         }
                     }
@@ -211,7 +213,7 @@ namespace Flowers_Brand
                         if (e.HasBuffOfType(BuffType.Charm) || e.HasBuffOfType(BuffType.Fear) || e.HasBuffOfType(BuffType.Stun) || e.HasBuffOfType(BuffType.Slow) || e.HasBuffOfType(BuffType.Suppression))
                             if (ComboW)
                                 if (W.IsReady())
-                                    W.Cast(e, UsePacket);
+                                    OKTWSpellCast(W, e);
 
                         if (e.IsValidTarget(E.Range))
                             if (E.IsReady())
@@ -224,13 +226,13 @@ namespace Flowers_Brand
                         {
                             if (e.IsValidTarget(Q.Range))
                                 if (Q.IsReady())
-                                    Q.Cast(e, UsePacket);
+                                    OKTWSpellCast(Q, e);
                         }
                         else if(!ComboQOnlyPassive)
                         {
                             if (e.IsValidTarget(Q.Range))
                                 if (Q.IsReady())
-                                    Q.Cast(e, UsePacket);
+                                    OKTWSpellCast(Q, e);
                         }
                     }
 
@@ -262,7 +264,7 @@ namespace Flowers_Brand
                             if (HavePassive(e))
                                 if (HarassQOnlyPassive)
                                     if (Q.IsReady())
-                                        Q.Cast(e, UsePacket);
+                                        OKTWSpellCast(Q, e);
                         }
 
                         {
@@ -278,7 +280,7 @@ namespace Flowers_Brand
                                 {
                                     if (HarassW)
                                         if (W.IsReady())
-                                            W.Cast(e, UsePacket);
+                                            OKTWSpellCast(W, e);
                                 }
                             }
                         }
@@ -287,7 +289,7 @@ namespace Flowers_Brand
                             if (e.HasBuffOfType(BuffType.Charm) || e.HasBuffOfType(BuffType.Fear) || e.HasBuffOfType(BuffType.Stun) || e.HasBuffOfType(BuffType.Slow) || e.HasBuffOfType(BuffType.Suppression))
                                 if (HarassW)
                                     if (W.IsReady())
-                                        W.Cast(e, UsePacket);
+                                        OKTWSpellCast(W, e);
                         }
                     }
                 }
@@ -368,13 +370,13 @@ namespace Flowers_Brand
                         if (Q.IsReady())
                             if (e.IsValidTarget(Q.Range))
                                 if (Me.GetSpellDamage(e, SpellSlot.Q) > e.Health)
-                                    Q.Cast(e, UsePacket);
+                                    OKTWSpellCast(Q, e);
 
                     if (KillStealW)
                         if (W.IsReady())
                             if (e.IsValidTarget(W.Range))
                                 if (Me.GetSpellDamage(e, SpellSlot.W) > e.Health)
-                                    W.Cast(e, UsePacket);
+                                    OKTWSpellCast(W, e);
 
                     if (KillStealE)
                         if (E.IsReady())
@@ -414,14 +416,14 @@ namespace Flowers_Brand
                         if (HavePassive(e))
                         {
                             if (Q.IsReady())
-                                Q.Cast(e, UsePacket);
+                                OKTWSpellCast(Q, e);
                         }
                         else if (!HavePassive(e))
                         {
                             if (E.IsReady())
                                 if (E.CastOnUnit(e, UsePacket))
                                     if (Q.IsReady())
-                                        Q.Cast(e, UsePacket);
+                                        OKTWSpellCast(Q, e);
                         }
             }
             catch (Exception ex)
@@ -441,14 +443,14 @@ namespace Flowers_Brand
                             if(HavePassive(sender))
                             {
                                 if (Q.IsReady())
-                                    Q.Cast(sender, UsePacket);
+                                    OKTWSpellCast(Q, sender);
                             }
                             else if(!HavePassive(sender))
                             {
                                 if (E.IsReady())
                                     if (E.CastOnUnit(sender, UsePacket))
                                         if (Q.IsReady())
-                                            Q.Cast(sender, UsePacket);
+                                            OKTWSpellCast(Q, sender);
                             }
                         }
 
@@ -518,6 +520,81 @@ namespace Flowers_Brand
                 Damage += Me.GetSummonerSpellDamage(enemy, LeagueSharp.Common.Damage.SummonerSpell.Ignite);
 
             return (float)Damage;
+        }
+
+        private static void OKTWSpellCast(Spell spells, Obj_AI_Base e)
+        {
+            if (Menu.Item("PredictionMODE", true).GetValue<StringList>().SelectedIndex == 1)
+            {
+                OktwPrediction.SkillshotType CoreType2 = OktwPrediction.SkillshotType.SkillshotLine;
+                bool aoe2 = false;
+
+                if (spells.Type == SkillshotType.SkillshotCircle)
+                {
+                    CoreType2 = OktwPrediction.SkillshotType.SkillshotCircle;
+                    aoe2 = true;
+                }
+
+                if (spells.Width > 80 && !spells.Collision)
+                    aoe2 = true;
+
+                var predInput2 = new OktwPrediction.PredictionInput
+                {
+                    Aoe = aoe2,
+                    Collision = spells.Collision,
+                    Speed = spells.Speed,
+                    Delay = spells.Delay,
+                    Range = spells.Range,
+                    From = Me.ServerPosition,
+                    Radius = spells.Width,
+                    Unit = e,
+                    Type = CoreType2
+                };
+                var poutput2 = OktwPrediction.Prediction.GetPrediction(predInput2);
+
+                if (spells.Speed != float.MaxValue && OktwPrediction.CollisionYasuo(Me.ServerPosition, poutput2.CastPosition))
+                    return;
+
+                if (Menu.Item("HitChance", true).GetValue<StringList>().SelectedIndex == 0)
+                {
+                    if (poutput2.Hitchance >= OktwPrediction.HitChance.VeryHigh)
+                        spells.Cast(poutput2.CastPosition);
+                    else if (predInput2.Aoe && poutput2.AoeTargetsHitCount > 1 && poutput2.Hitchance >= OktwPrediction.HitChance.High)
+                    {
+                        spells.Cast(poutput2.CastPosition);
+                    }
+
+                }
+                else if (Menu.Item("HitChance", true).GetValue<StringList>().SelectedIndex == 1)
+                {
+                    if (poutput2.Hitchance >= OktwPrediction.HitChance.High)
+                        spells.Cast(poutput2.CastPosition);
+
+                }
+                else if (Menu.Item("HitChance", true).GetValue<StringList>().SelectedIndex == 2)
+                {
+                    if (poutput2.Hitchance >= OktwPrediction.HitChance.Medium)
+                        spells.Cast(poutput2.CastPosition);
+                }
+            }
+            else if (Menu.Item("PredictionMODE", true).GetValue<StringList>().SelectedIndex == 0)
+            {
+                if (Menu.Item("HitChance", true).GetValue<StringList>().SelectedIndex == 0)
+                {
+                    spells.CastIfHitchanceEquals(e, HitChance.VeryHigh);
+                    return;
+                }
+                else if (Menu.Item("HitChance", true).GetValue<StringList>().SelectedIndex == 1)
+                {
+                    spells.CastIfHitchanceEquals(e, HitChance.High);
+                    return;
+                }
+                else if (Menu.Item("HitChance ", true).GetValue<StringList>().SelectedIndex == 2)
+                {
+                    spells.CastIfHitchanceEquals(e, HitChance.Medium);
+                    return;
+                }
+            }
         }
     }
 }

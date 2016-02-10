@@ -1,9 +1,11 @@
 ﻿namespace Flowers_Commom
 {
     using LeagueSharp;
+    using LeagueSharp.Common;
     using SharpDX;
     using SharpDX.Direct3D9;
     using System;
+    using System.Collections.Generic;
     using Color = System.Drawing.Color;
 
     public class HpBarDraw
